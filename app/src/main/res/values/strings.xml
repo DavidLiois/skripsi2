@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Presensi Mobile</string>
+    <string name="Username">Username</string>
+    <string name="Password">Password</string>
+    <string name="LOGIN">LOGIN</string>
+    <string-array name="spinner">
+        <item>ADMIN</item>
+        <item>USER</item>
+    </string-array>
+</resources>
