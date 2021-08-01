@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.presensimobile">
+    package="com.android.mobileattendance">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
         android:allowBackup="true"
@@ -8,12 +12,27 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PresensiMobile">
-        <activity android:name=".AddEmployeeMenu"></activity>
-        <activity android:name=".ErrorMenu" />
-        <activity android:name=".UserHomeMenu" />
-        <activity android:name=".AdminHomeMenu" />
-        <activity android:name=".LoginMenu">
+        android:theme="@style/Theme.MobileAttendance">
+        <activity android:name=".userUpdatePassword"></activity>
+        <activity android:name=".userUpdateProfile" />
+        <activity android:name=".profile" />
+        <activity android:name=".leave" />
+        <activity android:name=".updatePassword" />
+        <activity android:name=".deleteProfile" />
+        <activity android:name=".updateProfile" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD4KfDcLVjVPatpIKtrPXot024Z4UHVZQ8" />
+
+        <activity android:name=".attendanceInfo" />
+        <activity android:name=".istirahat" />
+        <activity android:name=".attendance" />
+        <activity android:name=".employeeInfo" />
+        <activity android:name=".addEmployee" />
+        <activity android:name=".userHome" />
+        <activity android:name=".adminHome" />
+        <activity android:name=".login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

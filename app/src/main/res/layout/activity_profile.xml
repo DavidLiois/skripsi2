@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFE0"
+    tools:context=".profile">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_header"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_back"
+            android:layout_weight="3"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_btn"
+            android:layout_weight="1"
+            android:text="@string/profile"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/exitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_exit"
+            android:layout_weight="3"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/fullname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/fullname"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/address"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/ward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/ward"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/subdistrict"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/subdistrict"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/district"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/district"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/province"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/province"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/zip_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/zip_code"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <TextView
+                android:id="@+id/phonenumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
+                android:hint="@string/phonenumber"
+                android:textSize="24sp"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000000"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:ems="10"/>
+
+            <Button
+                android:id="@+id/updateProfileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_btn"
+                android:text="@string/update_profile"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:ems="10"/>
+
+            <Button
+                android:id="@+id/updatePasswordBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_btn"
+                android:text="@string/update_password"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:ems="10"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

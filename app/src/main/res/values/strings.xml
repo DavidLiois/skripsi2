@@ -1,10 +1,34 @@
 <resources>
-    <string name="app_name">Presensi Mobile</string>
-    <string name="Username">Username</string>
-    <string name="Password">Password</string>
-    <string name="LOGIN">LOGIN</string>
-    <string-array name="spinner">
-        <item>ADMIN</item>
-        <item>USER</item>
-    </string-array>
+    <string name="app_name">Mobile Attendance</string>
+    <string name="login">LOGIN</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="home">Home</string>
+    <string name="add_employee">Add Employee</string>
+    <string name="employee_info">Employee Info</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="update_password">Update Password</string>
+    <string name="attendance">Attendance</string>
+    <string name="istirahat">Break</string>
+    <string name="attendance_info">Attendance Info</string>
+    <string name="leave">Leave</string>
+    <string name="profile">Profile</string>
+    <string name="update">Update</string>
+    <string name="fullname">Fullname</string>
+    <string name="address">Address</string>
+    <string name="ward">Ward</string>
+    <string name="subdistrict">Subdistrict</string>
+    <string name="district">District</string>
+    <string name="province">Province</string>
+    <string name="zip_code">Zip Code</string>
+    <string name="phonenumber">Phone Number</string>
+    <string name="userrole">User Role</string>
+    <string name="current_date">Current Date</string>
+    <string name="current_time">Current Time</string>
+    <string name="clock_in">Clock-In</string>
+    <string name="clock_out">Clock-Out</string>
+    <string name="after_break">After Break</string>
+    <string name="search">Search</string>
+    <string name="kosong">-</string>
 </resources>
