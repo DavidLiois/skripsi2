@@ -54,132 +54,306 @@
             android:orientation="vertical"
             android:gravity="center">
 
+            <ImageView
+                android:layout_margin="10dp"
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/ic_launcher"/>
+
             <TextView
-                android:id="@+id/fullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/fullname"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Fullname"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:ems="10"
+                android:background="@drawable/background_input"
+                android:padding="5dp"
+                android:inputType="text">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="Position"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/jabatan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:padding="5dp"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Division"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/divisi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="My Noble Dream"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/usernote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:ems="10"
+                android:background="@drawable/background_input"
+                android:padding="5dp">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Gender"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Place of birth"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/pob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Date of birth"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Address"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
 
             <TextView
                 android:id="@+id/address"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/address"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
 
             <TextView
-                android:id="@+id/ward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/ward"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Phone Number"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/subdistrict"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/subdistrict"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
-
-            <TextView
-                android:id="@+id/district"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/district"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
-
-            <TextView
-                android:id="@+id/province"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/province"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
-
-            <TextView
-                android:id="@+id/zip_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/zip_code"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+            </TextView>
 
             <TextView
                 android:id="@+id/phonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:hint="@string/phonenumber"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Email"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_input">
+
+            </TextView>
 
             <Button
                 android:id="@+id/updateProfileBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_btn"
                 android:text="@string/update_profile"
                 android:textSize="24sp"
                 android:textColor="#FFFFFF"
                 android:padding="10dp"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 android:ems="10"/>
 
             <Button
                 android:id="@+id/updatePasswordBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_btn"
                 android:text="@string/update_password"
                 android:textSize="24sp"
                 android:textColor="#FFFFFF"
                 android:padding="10dp"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 android:ems="10"/>
 
         </LinearLayout>

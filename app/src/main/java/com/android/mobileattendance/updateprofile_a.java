@@ -9,11 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class updatePassword extends AppCompatActivity {
+public class updateprofile_a extends AppCompatActivity {
 
     private Button exitBtn;
     private Button backBtn;
     private Button searchBtn;
+    private Button updateprofilebtn;
     private EditText search;
     private String usernameTxt;
     private String clock_in_date;
@@ -29,7 +30,7 @@ public class updatePassword extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_password);
+        setContentView(R.layout.activity_updateprofile_a);
 
         usernameTxt = getIntent().getStringExtra("username");
         clock_in_date = getIntent().getStringExtra("clock_in_date");
@@ -45,6 +46,7 @@ public class updatePassword extends AppCompatActivity {
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
         searchBtn = findViewById(R.id.searchBtn);
+        updateprofilebtn = findViewById(R.id.updateprofilebtn);
         search = findViewById(R.id.search);
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +63,13 @@ public class updatePassword extends AppCompatActivity {
             }
         });
 
+        updateprofilebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateprofilebtn();
+            }
+        });
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,48 +79,32 @@ public class updatePassword extends AppCompatActivity {
     }
 
     private void exitBtn() {
-        Toast.makeText(updatePassword.this, "Exit Success", Toast.LENGTH_SHORT).show();
-        Intent login = new Intent(updatePassword.this, login.class);
+        Toast.makeText(updateprofile_a.this, "Exit Success", Toast.LENGTH_SHORT).show();
+        Intent login = new Intent(updateprofile_a.this, login.class);
         startActivity(login);
         finish();
     }
 
-    private void backBtn() {
-        if (usernameTxt.equals("Admin")) {
-            Intent adminHome = new Intent(updatePassword.this, adminHome.class);
-            adminHome.putExtra("username", usernameTxt);
-            adminHome.putExtra("clock_in_date", clock_in_date);
-            adminHome.putExtra("clock_out_date", clock_out_date);
-            adminHome.putExtra("clock_in_time", clock_in_time);
-            adminHome.putExtra("clock_out_time", clock_out_time);
-            adminHome.putExtra("break_date", break_date);
-            adminHome.putExtra("after_break_date", after_break_date);
-            adminHome.putExtra("break_time", break_time);
-            adminHome.putExtra("after_break_time", after_break_time);
-            adminHome.putExtra("present_intent",present_intent);
-            startActivity(adminHome);
-            finish();
-        } else {
-            Intent userHome = new Intent(updatePassword.this, userHome.class);
-            userHome.putExtra("username", usernameTxt);
-            userHome.putExtra("clock_in_date", clock_in_date);
-            userHome.putExtra("clock_out_date", clock_out_date);
-            userHome.putExtra("clock_in_time", clock_in_time);
-            userHome.putExtra("clock_out_time", clock_out_time);
-            userHome.putExtra("break_date", break_date);
-            userHome.putExtra("after_break_date", after_break_date);
-            userHome.putExtra("break_time", break_time);
-            userHome.putExtra("after_break_time", after_break_time);
-            userHome.putExtra("present_intent",present_intent);
-            startActivity(userHome);
-            finish();
-        }
+    private void updateprofilebtn() {
+        Intent login = new Intent(updateprofile_a.this, updateprofile_b.class);
+        login.putExtra("username", usernameTxt);
+        login.putExtra("clock_in_date", clock_in_date);
+        login.putExtra("clock_out_date", clock_out_date);
+        login.putExtra("clock_in_time", clock_in_time);
+        login.putExtra("clock_out_time", clock_out_time);
+        login.putExtra("break_date", break_date);
+        login.putExtra("after_break_date", after_break_date);
+        login.putExtra("break_time", break_time);
+        login.putExtra("after_break_time", after_break_time);
+        login.putExtra("present_intent",present_intent);
+        startActivity(login);
+        finish();
     }
 
     private void searchBtn() {
         String strsearch = search.getText().toString();
         if (strsearch.equals("user2")){
-            Intent login = new Intent(updatePassword.this, updatepassword_a.class);
+            Intent login = new Intent(updateprofile_a.this, updateprofile_c.class);
             login.putExtra("username", usernameTxt);
             login.putExtra("clock_in_date", clock_in_date);
             login.putExtra("clock_out_date", clock_out_date);
@@ -125,7 +118,7 @@ public class updatePassword extends AppCompatActivity {
             startActivity(login);
             finish();
         }else{
-            Intent login = new Intent(updatePassword.this, updatepassword_c.class);
+            Intent login = new Intent(updateprofile_a.this, updateprofile_c.class);
             login.putExtra("username", usernameTxt);
             login.putExtra("clock_in_date", clock_in_date);
             login.putExtra("clock_out_date", clock_out_date);
@@ -137,6 +130,38 @@ public class updatePassword extends AppCompatActivity {
             login.putExtra("after_break_time", after_break_time);
             login.putExtra("present_intent",present_intent);
             startActivity(login);
+            finish();
+        }
+    }
+
+    private void backBtn() {
+        if (usernameTxt.equals("Admin")) {
+            Intent adminHome = new Intent(updateprofile_a.this, adminHome.class);
+            adminHome.putExtra("username", usernameTxt);
+            adminHome.putExtra("clock_in_date", clock_in_date);
+            adminHome.putExtra("clock_out_date", clock_out_date);
+            adminHome.putExtra("clock_in_time", clock_in_time);
+            adminHome.putExtra("clock_out_time", clock_out_time);
+            adminHome.putExtra("break_date", break_date);
+            adminHome.putExtra("after_break_date", after_break_date);
+            adminHome.putExtra("break_time", break_time);
+            adminHome.putExtra("after_break_time", after_break_time);
+            adminHome.putExtra("present_intent",present_intent);
+            startActivity(adminHome);
+            finish();
+        } else {
+            Intent userHome = new Intent(updateprofile_a.this, userHome.class);
+            userHome.putExtra("username", usernameTxt);
+            userHome.putExtra("clock_in_date", clock_in_date);
+            userHome.putExtra("clock_out_date", clock_out_date);
+            userHome.putExtra("clock_in_time", clock_in_time);
+            userHome.putExtra("clock_out_time", clock_out_time);
+            userHome.putExtra("break_date", break_date);
+            userHome.putExtra("after_break_date", after_break_date);
+            userHome.putExtra("break_time", break_time);
+            userHome.putExtra("after_break_time", after_break_time);
+            userHome.putExtra("present_intent",present_intent);
+            startActivity(userHome);
             finish();
         }
     }

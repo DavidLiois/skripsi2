@@ -44,4 +44,40 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/image"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="path: "
+        android:textColor="#a9a9a9"
+        android:id="@+id/path"
+        android:textSize="24dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <EditText
+        android:id="@+id/etCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Caption"
+        android:textColor="@color/black"
+        android:textColorHint="#a9a9a9"
+        android:textSize="24dp"
+        android:imeOptions="actionDone"/>
+
+    <Button
+        android:id="@+id/btnUpload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="upload"
+        android:textColor="@color/black"
+        android:backgroundTint="#a2a2a2"/>
+
 </LinearLayout>

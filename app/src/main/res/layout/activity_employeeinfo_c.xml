@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FFFFE0"
-    tools:context=".employeeInfo">
+    tools:context=".employeeinfo_c">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,6 +75,24 @@
             android:background="@drawable/icon_search"
             android:layout_weight="3"
             android:padding="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_view_border"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:text="Data not found"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 

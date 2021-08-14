@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-public class updateProfile extends AppCompatActivity {
+public class
+updateProfile extends AppCompatActivity {
 
     private Button exitBtn;
     private Button backBtn;
+    private Button searchBtn;
+    private EditText search;
     private String usernameTxt;
     private String clock_in_date;
     private String clock_out_date;
@@ -41,6 +45,8 @@ public class updateProfile extends AppCompatActivity {
 
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
+        searchBtn = findViewById(R.id.searchBtn);
+        search = findViewById(R.id.search);
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +59,13 @@ public class updateProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 backBtn();
+            }
+        });
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchBtn();
             }
         });
     }
@@ -92,6 +105,39 @@ public class updateProfile extends AppCompatActivity {
             userHome.putExtra("after_break_time", after_break_time);
             userHome.putExtra("present_intent",present_intent);
             startActivity(userHome);
+            finish();
+        }
+    }
+
+    private void searchBtn() {
+        String strsearch = search.getText().toString();
+        if (strsearch.equals("user2")){
+            Intent login = new Intent(updateProfile.this, updateprofile_a.class);
+            login.putExtra("username", usernameTxt);
+            login.putExtra("clock_in_date", clock_in_date);
+            login.putExtra("clock_out_date", clock_out_date);
+            login.putExtra("clock_in_time", clock_in_time);
+            login.putExtra("clock_out_time", clock_out_time);
+            login.putExtra("break_date", break_date);
+            login.putExtra("after_break_date", after_break_date);
+            login.putExtra("break_time", break_time);
+            login.putExtra("after_break_time", after_break_time);
+            login.putExtra("present_intent",present_intent);
+            startActivity(login);
+            finish();
+        }else{
+            Intent login = new Intent(updateProfile.this, updateprofile_c.class);
+            login.putExtra("username", usernameTxt);
+            login.putExtra("clock_in_date", clock_in_date);
+            login.putExtra("clock_out_date", clock_out_date);
+            login.putExtra("clock_in_time", clock_in_time);
+            login.putExtra("clock_out_time", clock_out_time);
+            login.putExtra("break_date", break_date);
+            login.putExtra("after_break_date", after_break_date);
+            login.putExtra("break_time", break_time);
+            login.putExtra("after_break_time", after_break_time);
+            login.putExtra("present_intent",present_intent);
+            startActivity(login);
             finish();
         }
     }
