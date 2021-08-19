@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFE0"
+    tools:context=".updateProfile2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_header"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_back"
+            android:layout_weight="3"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_btn"
+            android:layout_weight="1"
+            android:text="@string/update_profile"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/exitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/icon_exit"
+            android:layout_weight="3"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="Position"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/jabatan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
+                android:padding="5dp"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Division"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/divisi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Fullname"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:padding="5dp"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Place of birth"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/pob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Date of birth"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Address"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/alamat"
+                android:layout_width="match_parent"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="textMultiLine">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Phone number"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/phonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Email"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_btn"
+                android:text="update"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
