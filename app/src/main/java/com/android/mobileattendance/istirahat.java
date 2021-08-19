@@ -1,10 +1,12 @@
 package com.android.mobileattendance;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -41,7 +43,6 @@ public class istirahat extends AppCompatActivity {
     private TextView afterBreakDate;
     private TextView afterBreakTime;
     private TextView present;
-    private String usernameTxt;
     private String clock_in_date;
     private String clock_out_date;
     private String clock_in_time;
@@ -51,6 +52,8 @@ public class istirahat extends AppCompatActivity {
     private String after_break_time;
     private String after_break_date;
     private String present_intent;
+    private String id;
+    private String fullname;
     private Boolean validationDistance;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
@@ -60,7 +63,6 @@ public class istirahat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_istirahat);
 
-        usernameTxt = getIntent().getStringExtra("username");
         clock_in_date = getIntent().getStringExtra("clock_in_date");
         clock_out_date = getIntent().getStringExtra("clock_out_date");
         clock_in_time = getIntent().getStringExtra("clock_in_time");
@@ -70,6 +72,8 @@ public class istirahat extends AppCompatActivity {
         after_break_time = getIntent().getStringExtra("after_break_time");
         after_break_date = getIntent().getStringExtra("after_break_date");
         present_intent = getIntent().getStringExtra("present_intent");
+        id = getIntent().getStringExtra("id");
+        fullname = getIntent().getStringExtra("fullname");
 
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
@@ -185,42 +189,44 @@ public class istirahat extends AppCompatActivity {
     }
 
     private void exitBtn() {
-        Toast.makeText(istirahat.this, "Exit Success", Toast.LENGTH_SHORT).show();
-        Intent login = new Intent(istirahat.this, login.class);
-        startActivity(login);
-        finish();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Toast.makeText(istirahat.this, "Exit Success", Toast.LENGTH_SHORT).show();
+                        Intent login = new Intent(istirahat.this, login.class);
+                        startActivity(login);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(istirahat.this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     private void backBtn() {
-        if (usernameTxt.equals("Admin")) {
-            Intent adminHome = new Intent(istirahat.this, adminHome.class);
-            adminHome.putExtra("username", usernameTxt);
-            adminHome.putExtra("clock_in_date", clock_in_date);
-            adminHome.putExtra("clock_out_date", clock_out_date);
-            adminHome.putExtra("clock_in_time", clock_in_time);
-            adminHome.putExtra("clock_out_time", clock_out_time);
-            adminHome.putExtra("break_date", breakDate.getText().toString());
-            adminHome.putExtra("after_break_date", afterBreakDate.getText().toString());
-            adminHome.putExtra("break_time", breakTime.getText().toString());
-            adminHome.putExtra("after_break_time", afterBreakTime.getText().toString());
-            adminHome.putExtra("present_intent",present_intent);
-            startActivity(adminHome);
-            finish();
-        } else {
-            Intent userHome = new Intent(istirahat.this, userHome.class);
-            userHome.putExtra("username", usernameTxt);
-            userHome.putExtra("clock_in_date", clock_in_date);
-            userHome.putExtra("clock_out_date", clock_out_date);
-            userHome.putExtra("clock_in_time", clock_in_time);
-            userHome.putExtra("clock_out_time", clock_out_time);
-            userHome.putExtra("break_date", breakDate.getText().toString());
-            userHome.putExtra("after_break_date", afterBreakDate.getText().toString());
-            userHome.putExtra("break_time", breakTime.getText().toString());
-            userHome.putExtra("after_break_time", afterBreakTime.getText().toString());
-            userHome.putExtra("present_intent",present_intent);
-            startActivity(userHome);
-            finish();
-        }
+        Intent userHome = new Intent(istirahat.this, userHome.class);
+        userHome.putExtra("clock_in_date", clock_in_date);
+        userHome.putExtra("clock_out_date", clock_out_date);
+        userHome.putExtra("clock_in_time", clock_in_time);
+        userHome.putExtra("clock_out_time", clock_out_time);
+        userHome.putExtra("break_date", breakDate.getText().toString());
+        userHome.putExtra("after_break_date", afterBreakDate.getText().toString());
+        userHome.putExtra("break_time", breakTime.getText().toString());
+        userHome.putExtra("after_break_time", afterBreakTime.getText().toString());
+        userHome.putExtra("present_intent",present_intent);
+        userHome.putExtra("id", id);
+        userHome.putExtra("fullname", fullname);
+        startActivity(userHome);
+        finish();
     }
 
     private void getCurrentLocation() {
@@ -255,93 +261,47 @@ public class istirahat extends AppCompatActivity {
     }
 
     private void istirahat(){
-        if (usernameTxt.equals("Admin")){
-            distance();
-            if (validationDistance){
-                Toast.makeText(istirahat.this,"Break success",Toast.LENGTH_SHORT).show();
+        distance();
+        if (validationDistance){
+            Toast.makeText(istirahat.this,"Break success",Toast.LENGTH_SHORT).show();
 
-                Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
 
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+            String dateTime = simpleDateFormat.format(calendar.getTime());
+            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
 
-                breakDate.setText(dateTime);
-                breakTime.setText(dateTime2);
+            breakDate.setText(dateTime);
+            breakTime.setText(dateTime2);
 
-                istirahat.setEnabled(false);
-                afterBreak.setEnabled(true);
-            }else{
-                Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else{
-            distance();
-            if (validationDistance){
-                Toast.makeText(istirahat.this,"Break success",Toast.LENGTH_SHORT).show();
-
-                Calendar calendar = Calendar.getInstance();
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-                breakDate.setText(dateTime);
-                breakTime.setText(dateTime2);
-
-                istirahat.setEnabled(false);
-                afterBreak.setEnabled(true);
-            }else{
-                Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
+            istirahat.setEnabled(false);
+            afterBreak.setEnabled(true);
+        }else{
+            Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
     }
 
     private void afterBreak(){
-        if (usernameTxt.equals("Admin")){
-            distance();
-            if (validationDistance){
-                Toast.makeText(istirahat.this,"After break success",Toast.LENGTH_SHORT).show();
+        distance();
+        if (validationDistance){
+            Toast.makeText(istirahat.this,"After break success",Toast.LENGTH_SHORT).show();
 
-                Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
 
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+            String dateTime = simpleDateFormat.format(calendar.getTime());
+            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
 
-                afterBreakDate.setText(dateTime);
-                afterBreakTime.setText(dateTime2);
+            afterBreakDate.setText(dateTime);
+            afterBreakTime.setText(dateTime2);
 
-                afterBreak.setEnabled(false);
-            }else{
-                Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else{
-            if (validationDistance){
-                Toast.makeText(istirahat.this,"After break success",Toast.LENGTH_SHORT).show();
-
-                Calendar calendar = Calendar.getInstance();
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-                afterBreakDate.setText(dateTime);
-                afterBreakTime.setText(dateTime2);
-
-                afterBreak.setEnabled(false);
-            }else{
-                Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
+            afterBreak.setEnabled(false);
+        }else{
+            Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -381,5 +341,10 @@ public class istirahat extends AppCompatActivity {
         }else {
             validationDistance = false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backBtn();
     }
 }

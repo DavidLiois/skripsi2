@@ -51,132 +51,168 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Fullname"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
 
             <EditText
                 android:id="@+id/fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:padding="5dp"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/fullname"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="User note"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
+
+            </TextView>
 
             <EditText
-                android:id="@+id/address"
+                android:id="@+id/usernote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/address"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Address"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
+
+            </TextView>
 
             <EditText
-                android:id="@+id/ward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/ward"
+                android:id="@+id/alamat"
+                android:layout_width="match_parent"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="textMultiLine">
 
-            <EditText
-                android:id="@+id/subdistrict"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/subdistrict"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+            </EditText>
 
-            <EditText
-                android:id="@+id/district"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/district"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Phone number"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
 
-            <EditText
-                android:id="@+id/province"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/province"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
-
-            <EditText
-                android:id="@+id/zip_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/zip_code"
-                android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+            </TextView>
 
             <EditText
                 android:id="@+id/phonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_input"
-                android:inputType="text"
-                android:hint="@string/phonenumber"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Email"
+                android:textColor="#000"
                 android:textSize="24sp"
-                android:textColorHint="#A9A9A9"
-                android:textColor="#000000"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:ems="10"/>
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:background="@drawable/background_view_border"
+                android:inputType="text">
+
+            </EditText>
 
             <Button
-                android:id="@+id/updateProfileBtn"
-                android:layout_width="wrap_content"
+                android:id="@+id/update"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_btn"
-                android:text="@string/update"
+                android:text="update"
                 android:textSize="24sp"
                 android:textColor="#FFFFFF"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                android:ems="10"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 

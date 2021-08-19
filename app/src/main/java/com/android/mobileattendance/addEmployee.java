@@ -1,8 +1,10 @@
 package com.android.mobileattendance;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -34,7 +36,7 @@ import org.json.JSONObject;
 
 public class addEmployee extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    public static final String url = "http://192.168.1.7/CRUDVolley/AddEmployee.php";
+    private static final String url = "https://shivaistic-casualti.000webhostapp.com/AddEmployee.php";
 
     private Button exitBtn;
     private Button backBtn;
@@ -42,18 +44,18 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
     private TextView from;
     DatePickerDialog.OnDateSetListener setListenerFrom;
     private String fromDate;
-    private String usernameTxt;
-    private String text;
 
     private EditText jabatan,divisi,username,fullname,pob,phonenumber,alamat,email;
     private EditText password,passwordconfirmation;
+
+    private String fullname2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_employee);
 
-        usernameTxt = getIntent().getStringExtra("username");
+        fullname2 = getIntent().getStringExtra("fullname");
 
         from = findViewById(R.id.from);
 
@@ -66,7 +68,7 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        addEmployee.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth
+                        addEmployee.this, android.R.style.Theme_Holo_Dialog_MinWidth
                         ,setListenerFrom,year,month,day);
                 datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 datePickerDialog.show();
@@ -83,18 +85,9 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
         };
 
         Spinner spinner = (Spinner) findViewById(R.id.gender_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.gender_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.gender_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(this);
-        text = spinner.getSelectedItem().toString();
-
-        usernameTxt = getIntent().getStringExtra("username");
 
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
@@ -134,25 +127,39 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void exitBtn() {
-        Toast.makeText(addEmployee.this, "Exit Success", Toast.LENGTH_SHORT).show();
-        Intent login = new Intent(addEmployee.this, login.class);
-        startActivity(login);
-        finish();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Toast.makeText(addEmployee.this, "Exit Success", Toast.LENGTH_SHORT).show();
+                        Intent login = new Intent(addEmployee.this, login.class);
+                        startActivity(login);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(addEmployee.this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     private void backBtn() {
-        if (usernameTxt.equals("Admin")){
-            Intent adminHome = new Intent(addEmployee.this, adminHome.class);
-            adminHome.putExtra("username",usernameTxt);
-            startActivity(adminHome);
-            finish();
-        }
-        else{
-            Intent userHome = new Intent(addEmployee.this, userHome.class);
-            userHome.putExtra("username",usernameTxt);
-            startActivity(userHome);
-            finish();
-        }
+        Intent adminHome = new Intent(addEmployee.this, adminHome.class);
+        adminHome.putExtra("fullname",fullname2);
+        startActivity(adminHome);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backBtn();
     }
 
     @Override
@@ -223,7 +230,7 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
             phonenumber.setError("Enter number 10-13 digit");
             flag = 1;
         }
-        if(emailinput.isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(emailinput).matches()){
+        if(emailinput.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(emailinput).matches()){
             email.setError("Please Enter Valid Mail");
             flag = 1;
         }
@@ -237,77 +244,94 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
 
     private void addEmployeeBtn() {
         if(isValidate()){
-            String Jabatan = jabatan.getText().toString();
-            String Divisi = divisi.getText().toString();
-            String Username = username.getText().toString();
-            String Password = password.getText().toString();
-            String Fullname = fullname.getText().toString();
-            String Pob = pob.getText().toString();
-            String Phonenumber = phonenumber.getText().toString();
-            String Alamat = alamat.getText().toString();
-            String Email = email.getText().toString();
-            String Dob = from.getText().toString();
-            String JenisKelamin = text;
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                String success = jsonObject.getString("success");
-                                String message = jsonObject.getString("message");
-                                if(success.equals("0")){
-                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
-                                }
-                                if(success.equals("1")){
-                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
-                                    Intent adminHome = new Intent(addEmployee.this, adminHome.class);
-                                    adminHome.putExtra("username",usernameTxt);
-                                    startActivity(adminHome);
-                                    finish();
-                                }
-                                if(success.equals("2")){
-                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
-                                }
-                                if(success.equals("3")){
-                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
-                                }
-                                if(success.equals("4")){
-                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
-                                }
-                            }catch (Exception e){
-                                e.printStackTrace();
-                                Toast.makeText(addEmployee.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
-                }
-            })
-            {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<>();
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            String Jabatan = jabatan.getText().toString();
+                            String Divisi = divisi.getText().toString();
+                            String Username = username.getText().toString();
+                            String Password = password.getText().toString();
+                            String Fullname = fullname.getText().toString();
+                            String Pob = pob.getText().toString();
+                            String Phonenumber = phonenumber.getText().toString();
+                            String Alamat = alamat.getText().toString();
+                            String Email = email.getText().toString();
+                            String Dob = from.getText().toString();
+                            Spinner spinner = (Spinner) findViewById(R.id.gender_spinner);
+                            String JenisKelamin = spinner.getSelectedItem().toString();
 
-                    params.put("jabatan", Jabatan);
-                    params.put("divisi", Divisi);
-                    params.put("username", Username);
-                    params.put("fullname", Fullname);
-                    params.put("jeniskelamin", JenisKelamin);
-                    params.put("pob", Pob);
-                    params.put("dob", Dob);
-                    params.put("alamat", Alamat);
-                    params.put("email", Email);
-                    params.put("phonenumber", Phonenumber);
-                    params.put("password", Password);
-                    return params;
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response);
+                                                String success = jsonObject.getString("success");
+                                                String message = jsonObject.getString("message");
+                                                if(success.equals("0")){
+                                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
+                                                }
+                                                if(success.equals("1")){
+                                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
+                                                    Intent adminHome = new Intent(addEmployee.this, adminHome.class);
+                                                    adminHome.putExtra("fullname",fullname2);
+                                                    startActivity(adminHome);
+                                                    finish();
+                                                }
+                                                if(success.equals("2")){
+                                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
+                                                }
+                                                if(success.equals("3")){
+                                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
+                                                }
+                                                if(success.equals("4")){
+                                                    Toast.makeText(addEmployee.this,message,Toast.LENGTH_SHORT).show();
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                                Toast.makeText(addEmployee.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            {
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String, String> params = new HashMap<>();
+                                    params.put("jabatan", Jabatan);
+                                    params.put("divisi", Divisi);
+                                    params.put("username", Username);
+                                    params.put("fullname", Fullname);
+                                    params.put("jeniskelamin", JenisKelamin);
+                                    params.put("pob", Pob);
+                                    params.put("dob", Dob);
+                                    params.put("alamat", Alamat);
+                                    params.put("email", Email);
+                                    params.put("phonenumber", Phonenumber);
+                                    params.put("password", Password);
+                                    return params;
+                                }
+                            };
+                            RequestQueue queue = Volley.newRequestQueue(addEmployee.this);
+                            queue.add(stringRequest);
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
                 }
             };
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(stringRequest);
+
+            androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(addEmployee.this);
+            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
         }
     }
 }

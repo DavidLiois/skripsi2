@@ -1,10 +1,12 @@
 package com.android.mobileattendance;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -41,7 +43,6 @@ public class attendance extends AppCompatActivity {
     private TextView clockInTime;
     private TextView clockOutDate;
     private TextView clockOutTime;
-    private String usernameTxt;
     private String clock_in_date;
     private String clock_out_date;
     private String clock_in_time;
@@ -52,6 +53,8 @@ public class attendance extends AppCompatActivity {
     private String after_break_date;
     private String present;
     private String present_intent;
+    private String id;
+    private String fullname;
     private Double latitudeCurrentLocation;
     private Double longitudeCurrentLocation;
     private Boolean validationDistance;
@@ -63,7 +66,6 @@ public class attendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
 
-        usernameTxt = getIntent().getStringExtra("username");
         clock_in_date = getIntent().getStringExtra("clock_in_date");
         clock_out_date = getIntent().getStringExtra("clock_out_date");
         clock_in_time = getIntent().getStringExtra("clock_in_time");
@@ -73,6 +75,9 @@ public class attendance extends AppCompatActivity {
         after_break_time = getIntent().getStringExtra("after_break_time");
         after_break_date = getIntent().getStringExtra("after_break_date");
         present_intent = getIntent().getStringExtra("present_intent");
+
+        id = getIntent().getStringExtra("id");
+        fullname = getIntent().getStringExtra("fullname");
 
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
@@ -179,44 +184,50 @@ public class attendance extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        backBtn();
+    }
+
     private void exitBtn() {
-        Toast.makeText(attendance.this, "Exit Success", Toast.LENGTH_SHORT).show();
-        Intent login = new Intent(attendance.this, login.class);
-        startActivity(login);
-        finish();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Toast.makeText(attendance.this, "Exit Success", Toast.LENGTH_SHORT).show();
+                        Intent login = new Intent(attendance.this, login.class);
+                        startActivity(login);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(attendance.this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     private void backBtn() {
-        if (usernameTxt.equals("Admin")){
-            Intent adminHome = new Intent(attendance.this, adminHome.class);
-            adminHome.putExtra("username",usernameTxt);
-            adminHome.putExtra("clock_in_date",clockInDate.getText().toString());
-            adminHome.putExtra("clock_out_date",clockOutDate.getText().toString());
-            adminHome.putExtra("clock_in_time",clockInTime.getText().toString());
-            adminHome.putExtra("clock_out_time",clockOutTime.getText().toString());
-            adminHome.putExtra("break_date",break_date);
-            adminHome.putExtra("after_break_date",after_break_date);
-            adminHome.putExtra("break_time",break_time);
-            adminHome.putExtra("after_break_time",after_break_time);
-            adminHome.putExtra("present_intent",present);
-            startActivity(adminHome);
-            finish();
-        }
-        else{
-            Intent userHome = new Intent(attendance.this, userHome.class);
-            userHome.putExtra("username",usernameTxt);
-            userHome.putExtra("clock_in_date",clockInDate.getText().toString());
-            userHome.putExtra("clock_out_date",clockOutDate.getText().toString());
-            userHome.putExtra("clock_in_time",clockInTime.getText().toString());
-            userHome.putExtra("clock_out_time",clockOutTime.getText().toString());
-            userHome.putExtra("break_date",break_date);
-            userHome.putExtra("after_break_date",after_break_date);
-            userHome.putExtra("break_time",break_time);
-            userHome.putExtra("after_break_time",after_break_time);
-            userHome.putExtra("present_intent",present);
-            startActivity(userHome);
-            finish();
-        }
+        Intent userHome = new Intent(attendance.this, userHome.class);
+        userHome.putExtra("clock_in_date",clockInDate.getText().toString());
+        userHome.putExtra("clock_out_date",clockOutDate.getText().toString());
+        userHome.putExtra("clock_in_time",clockInTime.getText().toString());
+        userHome.putExtra("clock_out_time",clockOutTime.getText().toString());
+        userHome.putExtra("break_date",break_date);
+        userHome.putExtra("after_break_date",after_break_date);
+        userHome.putExtra("break_time",break_time);
+        userHome.putExtra("after_break_time",after_break_time);
+        userHome.putExtra("present_intent",present);
+        userHome.putExtra("id",id);
+        userHome.putExtra("fullname",fullname);
+        startActivity(userHome);
+        finish();
     }
 
     private void getCurrentLocation() {
@@ -253,98 +264,49 @@ public class attendance extends AppCompatActivity {
     }
 
     private void clockIn(){
-        if (usernameTxt.equals("Admin")){
-            distance();
-            if (validationDistance){
-                Toast.makeText(attendance.this,"Clock-In success",Toast.LENGTH_SHORT).show();
+        distance();
+        if (validationDistance){
+            Toast.makeText(attendance.this,"Clock-In success",Toast.LENGTH_SHORT).show();
 
-                Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
 
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+            String dateTime = simpleDateFormat.format(calendar.getTime());
+            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
 
-                clockInDate.setText(dateTime);
-                clockInTime.setText(dateTime2);
+            clockInDate.setText(dateTime);
+            clockInTime.setText(dateTime2);
 
-                clockIn.setEnabled(false);
-                clockOut.setEnabled(true);
+            clockIn.setEnabled(false);
+            clockOut.setEnabled(true);
 
-                present = "present";
-            }else{
-                Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else{
-            distance();
-            if (validationDistance){
-                Toast.makeText(attendance.this,"Clock-In success",Toast.LENGTH_SHORT).show();
-
-                Calendar calendar = Calendar.getInstance();
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-                clockInDate.setText(dateTime);
-                clockInTime.setText(dateTime2);
-
-                clockIn.setEnabled(false);
-                clockOut.setEnabled(true);
-
-                present = "present";
-            }else{
-                Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
+            present = "present";
+        }else{
+            Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
     }
 
     private void clockOut(){
-        if (usernameTxt.equals("Admin")){
-            distance();
-            if (validationDistance){
-                Toast.makeText(attendance.this,"Clock-In success",Toast.LENGTH_SHORT).show();
+        distance();
+        if (validationDistance){
+            Toast.makeText(attendance.this,"Clock-Out success",Toast.LENGTH_SHORT).show();
 
-                Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
 
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+            String dateTime = simpleDateFormat.format(calendar.getTime());
+            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
 
-                clockOutDate.setText(dateTime);
-                clockOutTime.setText(dateTime2);
+            clockOutDate.setText(dateTime);
+            clockOutTime.setText(dateTime2);
 
-                clockOut.setEnabled(false);
-            }else{
-                Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
-        }
-        else{
-            distance();
-            if (validationDistance){
-                Toast.makeText(attendance.this,"Clock-Out success",Toast.LENGTH_SHORT).show();
-
-                Calendar calendar = Calendar.getInstance();
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-                String dateTime = simpleDateFormat.format(calendar.getTime());
-                String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-                clockOutDate.setText(dateTime);
-                clockOutTime.setText(dateTime2);
-
-                clockOut.setEnabled(false);
-            }else{
-                Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
-            }
+            clockOut.setEnabled(false);
+        }else{
+            Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -370,10 +332,8 @@ public class attendance extends AppCompatActivity {
     }
 
     private void distance(){
-        //double latitudeSaya = latitudeCurrentLocation;
-        //double longitudeSaya = longitudeCurrentLocation;
-        double latitudeSaya = -6.201367328854578;
-        double longitudeSaya = 106.7803736970193;
+        double latitudeSaya = latitudeCurrentLocation;
+        double longitudeSaya = longitudeCurrentLocation;
         double latitudeTujuan = -6.201367328854578;
         double longitudeTujuan = 106.7803736970193;
 

@@ -16,7 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileAttendance"
         android:usesCleartextTraffic="true">
-        <activity android:name=".updateprofile_b"></activity>
+        <activity android:name=".employeeInfoLeave"></activity>
+        <activity android:name=".employeeInfoAttendance" />
+        <activity android:name=".updateProfile2" />
+        <activity android:name=".updatePassword_b" />
+        <activity android:name=".updatePassword2" />
+        <activity android:name=".updateprofile_b" />
         <activity android:name=".updateprofile_a" />
         <activity android:name=".updateprofile_c" />
         <activity android:name=".updatepassword_c" />
