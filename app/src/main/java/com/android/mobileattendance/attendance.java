@@ -1,22 +1,31 @@
 package com.android.mobileattendance;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,10 +37,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 public class attendance extends AppCompatActivity {
+
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     private Button exitBtn;
     private Button backBtn;
@@ -43,16 +64,6 @@ public class attendance extends AppCompatActivity {
     private TextView clockInTime;
     private TextView clockOutDate;
     private TextView clockOutTime;
-    private String clock_in_date;
-    private String clock_out_date;
-    private String clock_in_time;
-    private String clock_out_time;
-    private String break_date;
-    private String break_time;
-    private String after_break_time;
-    private String after_break_date;
-    private String present;
-    private String present_intent;
     private String id;
     private String fullname;
     private Double latitudeCurrentLocation;
@@ -66,15 +77,11 @@ public class attendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
 
-        clock_in_date = getIntent().getStringExtra("clock_in_date");
-        clock_out_date = getIntent().getStringExtra("clock_out_date");
-        clock_in_time = getIntent().getStringExtra("clock_in_time");
-        clock_out_time = getIntent().getStringExtra("clock_out_time");
-        break_date = getIntent().getStringExtra("break_date");
-        break_time = getIntent().getStringExtra("break_time");
-        after_break_time = getIntent().getStringExtra("after_break_time");
-        after_break_date = getIntent().getStringExtra("after_break_date");
-        present_intent = getIntent().getStringExtra("present_intent");
+        executor = ContextCompat.getMainExecutor(this);
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Attendance Authentication")
+                .setAllowedAuthenticators(DEVICE_CREDENTIAL | BIOMETRIC_WEAK)
+                .build();
 
         id = getIntent().getStringExtra("id");
         fullname = getIntent().getStringExtra("fullname");
@@ -90,26 +97,7 @@ public class attendance extends AppCompatActivity {
         clockIn = findViewById(R.id.clockIn);
         clockOut = findViewById(R.id.clockOut);
 
-        clockOut.setEnabled(false);
-
-        clockInTime.setText(clock_in_time);
-
-        if (clockInTime.getText().equals("") | clockInTime.getText().equals("-")){
-            clockIn.setEnabled(true);
-            clockInTime.setText("-");
-        }else if (clockOutTime.getText().equals("-")){
-            clockIn.setEnabled(false);
-            clockOut.setEnabled(true);
-            clockInDate.setText(clock_in_date);
-            clockOutDate.setText(clock_out_date);
-            clockOutTime.setText(clock_out_time);
-        }
-        else{
-            clockIn.setEnabled(false);
-            clockInDate.setText(clock_in_date);
-            clockOutDate.setText(clock_out_date);
-            clockOutTime.setText(clock_out_time);
-        }
+        callVolley();
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +177,72 @@ public class attendance extends AppCompatActivity {
         backBtn();
     }
 
+    private void callVolley(){
+        String url = "https://shivaistic-casualti.000webhostapp.com/GetAttendanceData.php?data="+id;
+        StringRequest stringRequest = new StringRequest(url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String Date1 = jsonObject.getString("CreatedDate");
+                            String ClockIntimeStr = jsonObject.getString("JamDatang");
+                            String ClockOuttimeStr = jsonObject.getString("JamPulang");
+
+                            clockIn.setEnabled(false);
+                            clockOut.setEnabled(false);
+                            clockInDate.setText("-");
+                            clockInTime.setText("-");
+                            clockOutDate.setText("-");
+                            clockOutTime.setText("-");
+
+                            if(!Date1.equals("null")) {
+                                if(!ClockIntimeStr.equals("null")){
+                                    clockIn.setEnabled(false);
+                                    clockInDate.setText(Date1);
+                                    clockInTime.setText(ClockIntimeStr);
+                                    if(!ClockOuttimeStr.equals("null")){
+                                        clockOutDate.setText(Date1);
+                                        clockOutTime.setText(ClockOuttimeStr);
+                                    }else {
+                                        clockOutDate.setText("-");
+                                        clockOutTime.setText("-");
+                                        clockOut.setEnabled(true);
+                                    }
+                                }
+                                else{
+                                    clockInDate.setText("-");
+                                    clockInTime.setText("-");
+                                    clockIn.setEnabled(true);
+                                }
+                            }else {
+                                clockIn.setEnabled(true);
+                                clockOut.setEnabled(false);
+                                clockInDate.setText("-");
+                                clockInTime.setText("-");
+                                clockOutDate.setText("-");
+                                clockOutTime.setText("-");
+                            }
+                        }catch (Exception e){
+                            clockIn.setEnabled(true);
+                            clockOut.setEnabled(false);
+                            clockInDate.setText("-");
+                            clockInTime.setText("-");
+                            clockOutDate.setText("-");
+                            clockOutTime.setText("-");
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Error ! "+error,Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+    }
+
     private void exitBtn() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -215,15 +269,6 @@ public class attendance extends AppCompatActivity {
 
     private void backBtn() {
         Intent userHome = new Intent(attendance.this, userHome.class);
-        userHome.putExtra("clock_in_date",clockInDate.getText().toString());
-        userHome.putExtra("clock_out_date",clockOutDate.getText().toString());
-        userHome.putExtra("clock_in_time",clockInTime.getText().toString());
-        userHome.putExtra("clock_out_time",clockOutTime.getText().toString());
-        userHome.putExtra("break_date",break_date);
-        userHome.putExtra("after_break_date",after_break_date);
-        userHome.putExtra("break_time",break_time);
-        userHome.putExtra("after_break_time",after_break_time);
-        userHome.putExtra("present_intent",present);
         userHome.putExtra("id",id);
         userHome.putExtra("fullname",fullname);
         startActivity(userHome);
@@ -245,7 +290,7 @@ public class attendance extends AppCompatActivity {
                                     ,location.getLongitude());
                             MarkerOptions options = new MarkerOptions().position(latLng)
                                     .title("I am there");
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,50));
                             googleMap.addMarker(options);
                         }
                     });
@@ -263,48 +308,161 @@ public class attendance extends AppCompatActivity {
         }
     }
 
+    public void biometric(String s){
+        biometricPrompt = new BiometricPrompt(attendance.this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                if(s.equals("clock_in")){
+                    clockInSuccess();
+                }
+                else{
+                    clockOutSuccess();
+                }
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        biometricPrompt.authenticate(promptInfo);
+    }
+
     private void clockIn(){
         distance();
         if (validationDistance){
-            Toast.makeText(attendance.this,"Clock-In success",Toast.LENGTH_SHORT).show();
-
-            Calendar calendar = Calendar.getInstance();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-            String dateTime = simpleDateFormat.format(calendar.getTime());
-            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-            clockInDate.setText(dateTime);
-            clockInTime.setText(dateTime2);
-
-            clockIn.setEnabled(false);
-            clockOut.setEnabled(true);
-
-            present = "present";
+            biometric("clock_in");
         }else{
             Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void clockInSuccess(){
+
+        String url = "https://shivaistic-casualti.000webhostapp.com/AddPresensi.php";
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+
+        String dateTime = simpleDateFormat.format(calendar.getTime());
+        String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+
+        String JamMasuk = dateTime2;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+                            String message = jsonObject.getString("message");
+                            if(success.equals("0")){
+                                Toast.makeText(attendance.this,message,Toast.LENGTH_SHORT).show();
+                            }
+                            if(success.equals("1")){
+                                Toast.makeText(attendance.this,message,Toast.LENGTH_SHORT).show();
+                                clockInDate.setText(dateTime);
+                                clockInTime.setText(dateTime2);
+
+                                clockIn.setEnabled(false);
+                                clockOut.setEnabled(true);
+
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(attendance.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("StaffId", id);
+                params.put("JamDatang", JamMasuk);
+                params.put("JamTerlambat", "");
+                params.put("AlasanTerlambat", "");
+                params.put("Longtitude", longitudeCurrentLocation.toString());
+                params.put("Latitude", latitudeCurrentLocation.toString());
+                params.put("key", "masuk");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(attendance.this);
+        queue.add(stringRequest);
+    }
+
+    private void clockOutSuccess(){
+
+        String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+
+        String dateTime = simpleDateFormat.format(calendar.getTime());
+        String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+
+        clockOutDate.setText(dateTime);
+        clockOutTime.setText(dateTime2);
+
+        clockOut.setEnabled(false);
+
+        String JamPulang = dateTime2;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {}
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("StaffId", id);
+                params.put("jampulang", JamPulang);
+                params.put("key", "pulang");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(attendance.this);
+        queue.add(stringRequest);
+    }
+
     private void clockOut(){
         distance();
         if (validationDistance){
-            Toast.makeText(attendance.this,"Clock-Out success",Toast.LENGTH_SHORT).show();
-
-            Calendar calendar = Calendar.getInstance();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-            String dateTime = simpleDateFormat.format(calendar.getTime());
-            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-            clockOutDate.setText(dateTime);
-            clockOutTime.setText(dateTime2);
-
-            clockOut.setEnabled(false);
+            biometric("clock_out");
         }else{
             Toast.makeText(attendance.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
@@ -334,8 +492,12 @@ public class attendance extends AppCompatActivity {
     private void distance(){
         double latitudeSaya = latitudeCurrentLocation;
         double longitudeSaya = longitudeCurrentLocation;
-        double latitudeTujuan = -6.201367328854578;
-        double longitudeTujuan = 106.7803736970193;
+        //double latitudeTujuan = -6.201367328854578; binus
+        //double longitudeTujuan = 106.7803736970193;
+        //double latitudeTujuan = -6.1548457; rumah david
+        //double longitudeTujuan = 106.8723808;
+        double latitudeTujuan = latitudeCurrentLocation;
+        double longitudeTujuan = longitudeCurrentLocation;
 
         double distance = getDistance(latitudeTujuan, longitudeTujuan, latitudeSaya, longitudeSaya);
 

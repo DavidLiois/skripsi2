@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 
 import com.android.volley.AuthFailureError;
@@ -28,7 +27,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class UserAdapter extends BaseAdapter {
@@ -85,6 +83,7 @@ public class UserAdapter extends BaseAdapter {
         fullname.setText(user.getFullname());
         jabatan.setText(user.getJabatan());
         division.setText(user.getDivisi());
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,48 +92,8 @@ public class UserAdapter extends BaseAdapter {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                                        new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                try {
-                                                    JSONObject jsonObject = new JSONObject(response);
-                                                    String success = jsonObject.getString("success");
-                                                    String message = jsonObject.getString("message");
-                                                    if(success.equals("0")){
-                                                        Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    if(success.equals("1")){
-                                                        Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
-                                                        Intent adminHome = new Intent(activity, adminHome.class);
-                                                        adminHome.putExtra("fullname", fullnames);
-                                                        activity.startActivity(adminHome);
-                                                        activity.finish();
-                                                    }
-
-                                                }catch (Exception e){
-                                                    e.printStackTrace();
-                                                    Toast.makeText(activity,"Registration Error !"+e,Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(activity,"Registration Error !"+error,Toast.LENGTH_LONG).show();
-                                    }
-                                })
-                                {
-                                    @Override
-                                    protected Map<String, String> getParams() throws AuthFailureError {
-                                        Map<String, String> params = new HashMap<>();
-                                        params.put("username", Username_);
-                                        return params;
-                                    }
-                                };
-                                RequestQueue queue = Volley.newRequestQueue(activity);
-                                queue.add(stringRequest);
+                                post(Username_);
                                 break;
-
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
                                 break;
@@ -151,19 +110,46 @@ public class UserAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        item.clear();
-        if (charText.length() == 0) {
-            item.addAll(item_list);
-        } else {
-            for (User wp : item_list) {
-                if (wp.getFullname().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    item.add(wp);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
+    public void post(String u){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+                            String message = jsonObject.getString("message");
+                            if(success.equals("0")){
+                                Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
+                            }
+                            if(success.equals("1")){
+                                Toast.makeText(activity,message,Toast.LENGTH_SHORT).show();
+                                Intent adminHome = new Intent(activity, adminHome.class);
+                                adminHome.putExtra("fullname", fullnames);
+                                activity.startActivity(adminHome);
+                                activity.finish();
+                            }
 
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(activity,"Error ! "+e,Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity,"Volley Error ! "+error,Toast.LENGTH_LONG).show();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", u);
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(activity);
+        queue.add(stringRequest);
+    }
 }

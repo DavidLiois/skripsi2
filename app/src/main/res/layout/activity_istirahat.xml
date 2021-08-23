@@ -190,17 +190,4 @@
 
     </ScrollView>
 
-    <TextView
-        android:id="@+id/present"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_view"
-        android:layout_weight="1"
-        android:text="@string/kosong"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        android:gravity="center"/>
-
 </LinearLayout>

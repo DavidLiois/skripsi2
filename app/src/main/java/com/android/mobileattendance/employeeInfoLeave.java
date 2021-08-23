@@ -83,11 +83,12 @@ public class employeeInfoLeave extends AppCompatActivity {
                         leave.setReason(jsonObject.getString("AlasanIzinCuti"));
                         leave.setStartDate(jsonObject.getString("MulaiCuti"));
                         leave.setEndDate(jsonObject.getString("SelesaiCuti"));
+                        leave.setImage(jsonObject.getString("BuktiIzinCuti"));
 
                         itemList.add(leave);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(employeeInfoLeave.this, "Error ! "+e, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(employeeInfoLeave.this, "No Data was found!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -95,7 +96,7 @@ public class employeeInfoLeave extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error){
-                Toast.makeText(employeeInfoLeave.this, "Error ! "+error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(employeeInfoLeave.this, "No Data was found!", Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

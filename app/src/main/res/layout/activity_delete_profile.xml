@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="#FFFFE0"
     tools:context=".deleteProfile"
+    android:focusableInTouchMode="true"
     >
 
     <LinearLayout
@@ -48,18 +49,19 @@
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"
         android:background="@drawable/background_header"
-        app:queryHint="Search name"
+        app:queryHint="Search ..."
         app:iconifiedByDefault="false"
         android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true">
     </androidx.appcompat.widget.SearchView>
 
     <ListView
         android:id="@+id/delete_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/black"
+        android:divider="@drawable/background_header"
         android:dividerHeight="2dp"/>
 
 </LinearLayout>

@@ -2,13 +2,16 @@ package com.android.mobileattendance;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,11 +34,10 @@ updateProfile extends AppCompatActivity {
     ListView update_list;
     ArrayList<User> itemList = new ArrayList<User>();
     updateAdapter adapter;
+    private SearchView search_bar;
 
     private Button exitBtn;
     private Button backBtn;
-    private Button searchBtn;
-    private EditText search;
     private String fullname;
 
     @Override
@@ -46,16 +48,40 @@ updateProfile extends AppCompatActivity {
         fullname = getIntent().getStringExtra("fullname");
 
         update_list = (ListView) findViewById(R.id.update_list);
+        search_bar = (SearchView) findViewById(R.id.search_bar);
 
         adapter = new updateAdapter(updateProfile.this, itemList);
         update_list.setAdapter(adapter);
 
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
-        searchBtn = findViewById(R.id.searchBtn);
-        search = findViewById(R.id.search);
 
         callVolley();
+
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                search_bar.clearFocus();
+                search(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        ImageView closeBtn = (ImageView) this.search_bar.findViewById(R.id.search_close_btn);
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_bar.setQuery("", false);
+                search_bar.clearFocus();
+                callVolley();
+            }
+        });
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,13 +96,54 @@ updateProfile extends AppCompatActivity {
                 backBtn();
             }
         });
+    }
 
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+    private void search(String s) {
+        String search_url = "https://shivaistic-casualti.000webhostapp.com/Searching.php?search_query="+s;
+
+        itemList.clear();
+        adapter.notifyDataSetChanged();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(search_url, new Response.Listener<JSONArray>() {
             @Override
-            public void onClick(View v) {
-                searchBtn();
+            public void onResponse(JSONArray response) {
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        User user = new User();
+                        user.setUsername(jsonObject.getString("Username"));
+                        user.setFullname(jsonObject.getString("Fullname"));
+                        user.setJabatan(jsonObject.getString("Jabatan"));
+                        user.setDivisi(jsonObject.getString("Divisi"));
+                        user.setEmail(jsonObject.getString("Email"));
+                        user.setPhonenumber(jsonObject.getString("PhoneNumber"));
+                        user.setDob(jsonObject.getString("DateOfBirth"));
+                        user.setPob(jsonObject.getString("PlaceOfBirth"));
+                        user.setAlamat(jsonObject.getString("Alamat"));
+                        user.setTemp(fullname);
+
+                        itemList.add(user);
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Log.e("error", String.valueOf(e));
+                    Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                }
+                finally {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error", String.valueOf(error));
+                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
             }
         });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 
     private void callVolley(){
@@ -105,6 +172,8 @@ updateProfile extends AppCompatActivity {
                         itemList.add(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Log.e("error", String.valueOf(e));
+                        Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -112,7 +181,8 @@ updateProfile extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e("error", String.valueOf(error));
+                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -148,10 +218,6 @@ updateProfile extends AppCompatActivity {
         adminHome.putExtra("fullname",fullname);
         startActivity(adminHome);
         finish();
-    }
-
-    private void searchBtn() {
-
     }
 
     @Override

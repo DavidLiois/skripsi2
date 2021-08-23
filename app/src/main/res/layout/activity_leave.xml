@@ -44,4 +44,120 @@
 
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="Reason"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:hint="Reason"
+                android:textColorHint="#A9A9A9"
+                android:textColor="#000"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:ems="10"
+                android:background="@drawable/background_input"
+                android:padding="10dp"
+                android:inputType="text">
+
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="Start Date"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:hint="Start Date"
+                android:textColorHint="#A9A9A9"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/background_input"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="End Date"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_gravity="center">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:hint="End Date"
+                android:textColorHint="#A9A9A9"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/background_input"/>
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_btn"
+                android:text="Submit"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:layout_margin="20dp"
+                android:padding="5dp"
+                android:ems="10"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>

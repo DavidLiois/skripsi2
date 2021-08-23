@@ -2,16 +2,17 @@ package com.android.mobileattendance;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
+
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -26,7 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class deleteProfile extends AppCompatActivity {
+public class deleteProfile extends AppCompatActivity{
 
     private static final String url = "https://shivaistic-casualti.000webhostapp.com/GetAllData.php";
     private ListView delete_list;
@@ -46,19 +47,39 @@ public class deleteProfile extends AppCompatActivity {
         fullname = getIntent().getStringExtra("fullname");
 
         delete_list = (ListView) findViewById(R.id.delete_list);
-        search_bar = findViewById(R.id.search_bar);
+        search_bar = (SearchView) findViewById(R.id.search_bar);
+        exitBtn = findViewById(R.id.exitBtn);
+        backBtn = findViewById(R.id.backBtn);
 
         adapter = new UserAdapter(deleteProfile.this, itemList);
         delete_list.setAdapter(adapter);
 
-        exitBtn = findViewById(R.id.exitBtn);
-        backBtn = findViewById(R.id.backBtn);
-        search_bar = findViewById(R.id.search_bar);
-
         callVolley();
 
-        search_bar.setOnQueryTextListener((SearchView.OnQueryTextListener) this);
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                search_bar.clearFocus();
+                search(s);
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        ImageView closeBtn = (ImageView) this.search_bar.findViewById(R.id.search_close_btn);
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search_bar.setQuery("", false);
+                search_bar.clearFocus();
+                callVolley();
+            }
+        });
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +103,8 @@ public class deleteProfile extends AppCompatActivity {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
+                try {
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
 
                         User user = new User();
@@ -94,16 +115,22 @@ public class deleteProfile extends AppCompatActivity {
                         user.setTemp(fullname);
 
                         itemList.add(user);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
-                adapter.notifyDataSetChanged();
+                catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("error", String.valueOf(e));
+                    Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                }
+                finally {
+                    adapter.notifyDataSetChanged();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e("error", String.valueOf(error));
+                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -139,6 +166,49 @@ public class deleteProfile extends AppCompatActivity {
         adminHome.putExtra("fullname",fullname);
         startActivity(adminHome);
         finish();
+    }
+
+    public void search(String search) {
+        String search_url = "https://shivaistic-casualti.000webhostapp.com/Searching.php?search_query="+search;
+
+        itemList.clear();
+        adapter.notifyDataSetChanged();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(search_url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        User user = new User();
+                        user.setUsername(jsonObject.getString("Username"));
+                        user.setFullname(jsonObject.getString("Fullname"));
+                        user.setJabatan(jsonObject.getString("Jabatan"));
+                        user.setDivisi(jsonObject.getString("Divisi"));
+                        user.setTemp(fullname);
+
+                        itemList.add(user);
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Log.e("error", String.valueOf(e));
+                    Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                }
+                finally {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error", String.valueOf(error));
+                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 
     @Override

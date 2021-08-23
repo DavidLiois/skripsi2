@@ -31,15 +31,6 @@ public class userUpdatePassword extends AppCompatActivity {
 
     private Button exitBtn;
     private Button backBtn;
-    private String clock_in_date;
-    private String clock_out_date;
-    private String clock_in_time;
-    private String clock_out_time;
-    private String break_date;
-    private String break_time;
-    private String after_break_time;
-    private String after_break_date;
-    private String present_intent;
     private Button updateBtn;
     private TextView tv_username;
     private EditText password,passwordconfirmation;
@@ -50,16 +41,6 @@ public class userUpdatePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_update_password);
-
-        clock_in_date = getIntent().getStringExtra("clock_in_date");
-        clock_out_date = getIntent().getStringExtra("clock_out_date");
-        clock_in_time = getIntent().getStringExtra("clock_in_time");
-        clock_out_time = getIntent().getStringExtra("clock_out_time");
-        break_date = getIntent().getStringExtra("break_date");
-        break_time = getIntent().getStringExtra("break_time");
-        after_break_time = getIntent().getStringExtra("after_break_time");
-        after_break_date = getIntent().getStringExtra("after_break_date");
-        present_intent = getIntent().getStringExtra("present_intent");
 
         fullname = getIntent().getStringExtra("fullname");
         id = getIntent().getStringExtra("id");
@@ -146,15 +127,6 @@ public class userUpdatePassword extends AppCompatActivity {
 
     private void backBtn() {
         Intent userHome = new Intent(userUpdatePassword.this, profile.class);
-        userHome.putExtra("clock_in_date", clock_in_date);
-        userHome.putExtra("clock_out_date", clock_out_date);
-        userHome.putExtra("clock_in_time", clock_in_time);
-        userHome.putExtra("clock_out_time", clock_out_time);
-        userHome.putExtra("break_date", break_date);
-        userHome.putExtra("after_break_date", after_break_date);
-        userHome.putExtra("break_time", break_time);
-        userHome.putExtra("after_break_time", after_break_time);
-        userHome.putExtra("present_intent",present_intent);
         userHome.putExtra("fullname", fullname);
         userHome.putExtra("id",id);
         startActivity(userHome);

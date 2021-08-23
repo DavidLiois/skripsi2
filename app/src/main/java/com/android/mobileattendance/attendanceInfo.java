@@ -9,31 +9,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class attendanceInfo extends AppCompatActivity {
 
+    ListView list;
+    ArrayList<attendanceinfomodel> itemList = new ArrayList<attendanceinfomodel>();
+    attendanceinfoAdapter adapter;
+
     private Button exitBtn;
     private Button backBtn;
-    private LinearLayout linearLayout;
-    private TextView currentDateTxt;
-    private TextView clockIn;
-    private TextView clockOut;
-    private TextView istirahat;
-    private TextView afterBreak;
-    private String clock_in_date;
-    private String clock_out_date;
-    private String clock_in_time;
-    private String clock_out_time;
-    private String break_date;
-    private String break_time;
-    private String after_break_time;
-    private String after_break_date;
-    private String present_intent;
     private String id;
     private String fullname;
 
@@ -42,38 +43,18 @@ public class attendanceInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance_info);
 
-        clock_in_date = getIntent().getStringExtra("clock_in_date");
-        clock_out_date = getIntent().getStringExtra("clock_out_date");
-        clock_in_time = getIntent().getStringExtra("clock_in_time");
-        clock_out_time = getIntent().getStringExtra("clock_out_time");
-        break_date = getIntent().getStringExtra("break_date");
-        break_time = getIntent().getStringExtra("break_time");
-        after_break_time = getIntent().getStringExtra("after_break_time");
-        after_break_date = getIntent().getStringExtra("after_break_date");
-        present_intent = getIntent().getStringExtra("present_intent");
+        list = (ListView) findViewById(R.id.list);
+
+        adapter = new attendanceinfoAdapter(attendanceInfo.this, itemList);
+        list.setAdapter(adapter);
+
         id = getIntent().getStringExtra("id");
         fullname = getIntent().getStringExtra("fullname");
 
+        callVolley();
+
         exitBtn = findViewById(R.id.exitBtn);
         backBtn = findViewById(R.id.backBtn);
-        linearLayout = findViewById(R.id.linearLayout);
-        currentDateTxt = findViewById(R.id.currentDateTxt);
-        clockIn = findViewById(R.id.clockIn);
-        clockOut = findViewById(R.id.clockOut);
-        istirahat = findViewById(R.id.istirahat);
-        afterBreak = findViewById(R.id.afterBreak);
-
-        currentDateTxt.setText(clock_in_date);
-        clockIn.setText(clock_in_time);
-        clockOut.setText(clock_out_time);
-        istirahat.setText(break_time);
-        afterBreak.setText(after_break_time);
-
-        if (currentDateTxt.getText().equals("") | currentDateTxt.getText().equals("-")){
-            linearLayout.setVisibility(View.INVISIBLE);
-        }else{
-            linearLayout.setVisibility(View.VISIBLE);
-        }
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +69,43 @@ public class attendanceInfo extends AppCompatActivity {
                 backBtn();
             }
         });
+    }
+
+    private void callVolley(){
+        itemList.clear();
+        adapter.notifyDataSetChanged();
+
+        String url = "https://shivaistic-casualti.000webhostapp.com/AttendanceInfo.php?data="+id;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        attendanceinfomodel presensi = new attendanceinfomodel();
+                        presensi.setDate2(jsonObject.getString("CreatedDate"));
+                        presensi.setJamDatang(jsonObject.getString("JamDatang"));
+                        presensi.setJamPulang(jsonObject.getString("JamPulang"));
+                        presensi.setMulaiIstirahat(jsonObject.getString("MulaiIstirahat"));
+                        presensi.setSelesaiIstirahat(jsonObject.getString("SelesaiIstirahat"));
+
+                        itemList.add(presensi);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 
     @Override
@@ -121,15 +139,6 @@ public class attendanceInfo extends AppCompatActivity {
 
     private void backBtn() {
         Intent userHome = new Intent(attendanceInfo.this, userHome.class);
-        userHome.putExtra("clock_in_date",clock_in_date);
-        userHome.putExtra("clock_out_date",clock_out_date);
-        userHome.putExtra("clock_in_time",clock_in_time);
-        userHome.putExtra("clock_out_time",clock_out_time);
-        userHome.putExtra("break_date",break_date);
-        userHome.putExtra("after_break_date",after_break_date);
-        userHome.putExtra("break_time",break_time);
-        userHome.putExtra("after_break_time",after_break_time);
-        userHome.putExtra("present_intent",present_intent);
         userHome.putExtra("id",id);
         userHome.putExtra("fullname",fullname);
         startActivity(userHome);

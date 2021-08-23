@@ -1,10 +1,5 @@
 package com.android.mobileattendance;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +11,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,10 +36,23 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 public class istirahat extends AppCompatActivity {
+
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     private Button exitBtn;
     private Button backBtn;
@@ -43,17 +65,11 @@ public class istirahat extends AppCompatActivity {
     private TextView afterBreakDate;
     private TextView afterBreakTime;
     private TextView present;
-    private String clock_in_date;
-    private String clock_out_date;
-    private String clock_in_time;
-    private String clock_out_time;
-    private String break_date;
-    private String break_time;
-    private String after_break_time;
-    private String after_break_date;
-    private String present_intent;
     private String id;
     private String fullname;
+    private String Istirahat2;
+    private Double latitudeCurrentLocation;
+    private Double longitudeCurrentLocation;
     private Boolean validationDistance;
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
@@ -63,15 +79,12 @@ public class istirahat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_istirahat);
 
-        clock_in_date = getIntent().getStringExtra("clock_in_date");
-        clock_out_date = getIntent().getStringExtra("clock_out_date");
-        clock_in_time = getIntent().getStringExtra("clock_in_time");
-        clock_out_time = getIntent().getStringExtra("clock_out_time");
-        break_date = getIntent().getStringExtra("break_date");
-        break_time = getIntent().getStringExtra("break_time");
-        after_break_time = getIntent().getStringExtra("after_break_time");
-        after_break_date = getIntent().getStringExtra("after_break_date");
-        present_intent = getIntent().getStringExtra("present_intent");
+        executor = ContextCompat.getMainExecutor(this);
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Break Authentication")
+                .setAllowedAuthenticators(DEVICE_CREDENTIAL | BIOMETRIC_WEAK)
+                .build();
+
         id = getIntent().getStringExtra("id");
         fullname = getIntent().getStringExtra("fullname");
 
@@ -85,35 +98,8 @@ public class istirahat extends AppCompatActivity {
         afterBreakTime = findViewById(R.id.afterBreakTime);
         istirahat = findViewById(R.id.istirahat);
         afterBreak = findViewById(R.id.afterBreak);
-        present = findViewById(R.id.present);
 
-        afterBreak.setEnabled(false);
-
-        breakTime.setText(break_time);
-        present.setText(present_intent);
-
-        if (present.getText().equals("present")){
-            if (breakTime.getText().equals("") | breakTime.getText().equals("-")){
-                istirahat.setEnabled(true);
-                breakTime.setText("-");
-            }else if (afterBreakTime.getText().equals("-")){
-                istirahat.setEnabled(false);
-                afterBreak.setEnabled(true);
-                breakDate.setText(break_date);
-                afterBreakDate.setText(after_break_date);
-                afterBreakTime.setText(after_break_time);
-            }
-            else{
-                istirahat.setEnabled(false);
-                breakDate.setText(break_date);
-                afterBreakDate.setText(after_break_date);
-                afterBreakTime.setText(after_break_time);
-            }
-        }
-        else {
-            istirahat.setEnabled(false);
-            breakTime.setText("-");
-        }
+        callVolley();
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +174,86 @@ public class istirahat extends AppCompatActivity {
         });
     }
 
+    private void callVolley(){
+        String url = "https://shivaistic-casualti.000webhostapp.com/GetAttendanceData.php?data="+id;
+        StringRequest stringRequest = new StringRequest(url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String Date1 = jsonObject.getString("CreatedDate");
+                            String ClockIntimeStr = jsonObject.getString("JamDatang");
+                            String breakStart = jsonObject.getString("MulaiIstirahat");
+                            String breakEnd = jsonObject.getString("SelesaiIstirahat");
+
+                            istirahat.setEnabled(false);
+                            afterBreak.setEnabled(false);
+                            breakDate.setText("-");
+                            breakTime.setText("-");
+                            afterBreakDate.setText("-");
+                            afterBreakTime.setText("-");
+
+                            if(!Date1.equals("null")) {
+                                if(!ClockIntimeStr.equals("null")){
+                                    if(!breakStart.equals("null")){
+                                        istirahat.setEnabled(false);
+                                        breakDate.setText(Date1);
+                                        breakTime.setText(breakStart);
+                                        if(!breakEnd.equals("null")){
+                                            afterBreak.setEnabled(false);
+                                            afterBreakDate.setText(Date1);
+                                            afterBreakTime.setText(breakEnd);
+                                        }
+                                        else{
+                                            afterBreakDate.setText("-");
+                                            afterBreakTime.setText("-");
+                                            afterBreak.setEnabled(true);
+                                        }
+                                    }
+                                    else{
+                                        breakTime.setText("-");
+                                        breakDate.setText("-");
+                                        istirahat.setEnabled(true);
+                                    }
+                                }
+                                else{
+                                    istirahat.setEnabled(false);
+                                    afterBreak.setEnabled(false);
+                                    breakDate.setText("-");
+                                    breakTime.setText("-");
+                                    afterBreakDate.setText("-");
+                                    afterBreakTime.setText("-");
+                                }
+                            }else {
+                                istirahat.setEnabled(false);
+                                afterBreak.setEnabled(false);
+                                breakDate.setText("-");
+                                breakTime.setText("-");
+                                afterBreakDate.setText("-");
+                                afterBreakTime.setText("-");
+                            }
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            istirahat.setEnabled(false);
+                            afterBreak.setEnabled(false);
+                            breakDate.setText("-");
+                            breakTime.setText("-");
+                            afterBreakDate.setText("-");
+                            afterBreakTime.setText("-");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Error ! "+error,Toast.LENGTH_LONG).show();
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
+    }
+
     private void exitBtn() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -214,15 +280,6 @@ public class istirahat extends AppCompatActivity {
 
     private void backBtn() {
         Intent userHome = new Intent(istirahat.this, userHome.class);
-        userHome.putExtra("clock_in_date", clock_in_date);
-        userHome.putExtra("clock_out_date", clock_out_date);
-        userHome.putExtra("clock_in_time", clock_in_time);
-        userHome.putExtra("clock_out_time", clock_out_time);
-        userHome.putExtra("break_date", breakDate.getText().toString());
-        userHome.putExtra("after_break_date", afterBreakDate.getText().toString());
-        userHome.putExtra("break_time", breakTime.getText().toString());
-        userHome.putExtra("after_break_time", afterBreakTime.getText().toString());
-        userHome.putExtra("present_intent",present_intent);
         userHome.putExtra("id", id);
         userHome.putExtra("fullname", fullname);
         startActivity(userHome);
@@ -238,11 +295,13 @@ public class istirahat extends AppCompatActivity {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
+                            latitudeCurrentLocation = location.getLatitude();
+                            longitudeCurrentLocation = location.getLongitude();
                             LatLng latLng = new LatLng(location.getLatitude()
                                     ,location.getLongitude());
                             MarkerOptions options = new MarkerOptions().position(latLng)
                                     .title("I am there");
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,50));
                             googleMap.addMarker(options);
                         }
                     });
@@ -256,28 +315,141 @@ public class istirahat extends AppCompatActivity {
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation();
-            }
+            }/*else {
+                Toast.makeText(this, "Permission denied...!", Toast.LENGTH_SHORT).show();
+            }*/
         }
+    }
+
+    public void biometric(String s){
+        biometricPrompt = new BiometricPrompt(istirahat.this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                if(s.equals("istirahat_success")){
+                    istirahatSuccess();
+                }
+                else{
+                    afterBreakSuccess();
+                }
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        biometricPrompt.authenticate(promptInfo);
+    }
+
+    private void istirahatSuccess(){
+
+        String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+
+        String dateTime = simpleDateFormat.format(calendar.getTime());
+        String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+
+        breakDate.setText(dateTime);
+        breakTime.setText(dateTime2);
+
+        istirahat.setEnabled(false);
+
+        Istirahat2 = dateTime2;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("StaffId", id);
+                params.put("mulaiistirahat", Istirahat2);
+                params.put("key", "istirahat_mulai");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(istirahat.this);
+        queue.add(stringRequest);
+        afterBreak.setEnabled(true);
+    }
+
+    private void afterBreakSuccess(){
+        String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
+
+        String dateTime = simpleDateFormat.format(calendar.getTime());
+        String dateTime2 = simpleDateFormat2.format(calendar.getTime());
+
+        afterBreakDate.setText(dateTime);
+        afterBreakTime.setText(dateTime2);
+
+        afterBreak.setEnabled(false);
+
+        String SelesaiIstirahat = dateTime2;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("StaffId", id);
+                params.put("selesaiistirahat", SelesaiIstirahat);
+                params.put("key", "istirahat_selesai");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(istirahat.this);
+        queue.add(stringRequest);
     }
 
     private void istirahat(){
         distance();
         if (validationDistance){
-            Toast.makeText(istirahat.this,"Break success",Toast.LENGTH_SHORT).show();
-
-            Calendar calendar = Calendar.getInstance();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-            String dateTime = simpleDateFormat.format(calendar.getTime());
-            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-            breakDate.setText(dateTime);
-            breakTime.setText(dateTime2);
-
-            istirahat.setEnabled(false);
-            afterBreak.setEnabled(true);
+            biometric("istirahat_success");
         }else{
             Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
@@ -286,20 +458,7 @@ public class istirahat extends AppCompatActivity {
     private void afterBreak(){
         distance();
         if (validationDistance){
-            Toast.makeText(istirahat.this,"After break success",Toast.LENGTH_SHORT).show();
-
-            Calendar calendar = Calendar.getInstance();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("hh:mm:ss");
-
-            String dateTime = simpleDateFormat.format(calendar.getTime());
-            String dateTime2 = simpleDateFormat2.format(calendar.getTime());
-
-            afterBreakDate.setText(dateTime);
-            afterBreakTime.setText(dateTime2);
-
-            afterBreak.setEnabled(false);
+            biometric("afterBreak_success");
         }else{
             Toast.makeText(istirahat.this,"Out of range",Toast.LENGTH_SHORT).show();
         }
@@ -327,12 +486,14 @@ public class istirahat extends AppCompatActivity {
     }
 
     private void distance(){
-        //double latitudeSaya = latitudeCurrentLocation;
-        //double longitudeSaya = longitudeCurrentLocation;
-        double latitudeSaya = -6.201367328854578;
-        double longitudeSaya = 106.7803736970193;
-        double latitudeTujuan = -6.201367328854578;
-        double longitudeTujuan = 106.7803736970193;
+        double latitudeSaya = latitudeCurrentLocation;
+        double longitudeSaya = longitudeCurrentLocation;
+        //double latitudeTujuan = -6.201367328854578;
+        //double longitudeTujuan = 106.7803736970193;
+        /*double latitudeTujuan = -6.1548457;
+        double longitudeTujuan = 106.8723808;*/
+        double latitudeTujuan = latitudeCurrentLocation;
+        double longitudeTujuan = longitudeCurrentLocation;
 
         double distance = getDistance(latitudeTujuan, longitudeTujuan, latitudeSaya, longitudeSaya);
 

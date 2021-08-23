@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:text="Fullname"
                 android:textColor="#000"
@@ -69,15 +69,18 @@
                 android:id="@+id/fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:gravity="center"
+                android:hint="Fullname"
+                android:textColorHint="#A9A9A9"
                 android:textColor="#000"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
-                android:textSize="24sp"
                 android:layout_marginLeft="20dp"
+                android:textSize="24sp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
-                android:padding="5dp"
+                android:background="@drawable/background_input"
+                android:padding="10dp"
                 android:inputType="text">
 
             </EditText>
@@ -98,15 +101,18 @@
                 android:id="@+id/usernote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:hint="User note"
                 android:gravity="center"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
@@ -126,16 +132,19 @@
             <EditText
                 android:id="@+id/alamat"
                 android:layout_width="match_parent"
+                android:textStyle="bold"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
+                android:hint="Address"
+                android:textColorHint="#A9A9A9"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="textMultiLine">
 
             </EditText>
@@ -156,15 +165,18 @@
                 android:id="@+id/phonenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:gravity="center"
+                android:hint="Phone number"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
@@ -185,15 +197,18 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:gravity="center"
+                android:hint="Email"
+                android:textColorHint="#A9A9A9"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>

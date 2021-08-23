@@ -53,44 +53,21 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:text="Position"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
-
             <EditText
+
                 android:id="@+id/jabatan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Position"
+                android:textColorHint="#A9A9A9"
+                android:layout_margin="20dp"
+                android:padding="10dp"
                 android:textColor="#000"
                 android:textSize="24sp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="20dp"
-                android:padding="5dp"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Division"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/divisi"
@@ -98,27 +75,17 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:textSize="24sp"
+                android:hint="Division"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Username"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/username"
@@ -126,27 +93,17 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:textSize="24sp"
+                android:hint="Username"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Password"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/password"
@@ -154,27 +111,17 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:textSize="24sp"
+                android:hint="Password"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="textPassword">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Password confirmation"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/passwordconfirmation"
@@ -182,40 +129,32 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:textSize="24sp"
+                android:hint="Password confirmation"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="textPassword">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Fullname"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
+                android:hint="Fullname"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
-                android:padding="5dp"
+                android:background="@drawable/background_input"
+                android:padding="10dp"
                 android:inputType="text">
 
             </EditText>
@@ -223,12 +162,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:padding="10dp"
                 android:text="Gender"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
+                android:textSize="24sp">
 
             </TextView>
 
@@ -239,105 +179,63 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="20dp"
-                android:backgroundTint="#0000FF"
+                android:backgroundTint="#1877f2"
                 android:background="@drawable/background_view_border"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Place of birth"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/pob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Place of birth"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Date of birth"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
-
-            <TextView
                 android:id="@+id/from"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Date of birth"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Address"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
+                android:background="@drawable/background_input"/>
 
             <EditText
                 android:id="@+id/alamat"
                 android:layout_width="match_parent"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
+                android:hint="Address"
+                android:textColorHint="#A9A9A9"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="textMultiLine">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Phone number"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/phonenumber"
@@ -345,27 +243,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
+                android:hint="Phone number"
+                android:textColorHint="#A9A9A9"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Email"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_gravity="center">
-
-            </TextView>
 
             <EditText
                 android:id="@+id/email"
@@ -373,12 +261,14 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:textSize="24sp"
+                android:hint="Email"
+                android:textColorHint="#A9A9A9"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:ems="10"
-                android:background="@drawable/background_view_border"
+                android:background="@drawable/background_input"
                 android:inputType="text">
 
             </EditText>

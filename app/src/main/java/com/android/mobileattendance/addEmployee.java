@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,7 +29,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +66,8 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        setDate(from);
 
         from.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +131,28 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    private void setDate(TextView view){
+
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("d/M/Y");
+        String date = formatter.format(today);
+        view.setText(date);
+    }
+
     private void exitBtn() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        final ProgressDialog loading = new ProgressDialog(addEmployee.this);
+                        loading.setMessage("Please Wait...");
+                        loading.show();
+                        loading.setCanceledOnTouchOutside(false);
                         Toast.makeText(addEmployee.this, "Exit Success", Toast.LENGTH_SHORT).show();
                         Intent login = new Intent(addEmployee.this, login.class);
                         startActivity(login);
+                        loading.dismiss();
                         finish();
                         break;
 
@@ -151,9 +169,14 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void backBtn() {
+        final ProgressDialog loading = new ProgressDialog(addEmployee.this);
+        loading.setMessage("Please Wait...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
         Intent adminHome = new Intent(addEmployee.this, adminHome.class);
         adminHome.putExtra("fullname",fullname2);
         startActivity(adminHome);
+        loading.dismiss();
         finish();
     }
 
@@ -190,24 +213,60 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
             jabatan.setError("Position must be filled");
             flag = 1;
         }
+        if(positioninput.startsWith(" ") || positioninput.endsWith(" ")){
+            jabatan.setError("Invalid input");
+            flag = 1;
+        }
         if(divisioninput.isEmpty()){
             divisi.setError("Division must be filled");
+            flag = 1;
+        }
+        if(divisioninput.startsWith(" ") || divisioninput.endsWith(" ")){
+            divisi.setError("Invalid input");
             flag = 1;
         }
         if(usernameinput.isEmpty()){
             username.setError("Fullname must be filled");
             flag = 1;
         }
+        if(usernameinput.contains(" ")){
+            username.setError("Space is not allowed");
+            flag = 1;
+        }
+        if(usernameinput.startsWith(" ") || usernameinput.endsWith(" ")){
+            username.setError("Invalid input");
+            flag = 1;
+        }
         if(fullnameinput.isEmpty()){
             fullname.setError("Fullname must be filled");
+            flag = 1;
+        }
+        if(fullnameinput.startsWith(" ") || fullnameinput.endsWith(" ")){
+            fullname.setError("Invalid input");
             flag = 1;
         }
         if(Password.isEmpty()){
             password.setError("Password must be filled");
             flag = 1;
         }
+        if(Password.contains(" ")){
+            password.setError("Space is not allowed");
+            flag = 1;
+        }
+        if(Password.startsWith(" ") || Password.endsWith(" ")){
+            password.setError("Invalid input");
+            flag = 1;
+        }
         if(PasswordC.isEmpty()){
             passwordconfirmation.setError("Password confirmation must be filled");
+            flag = 1;
+        }
+        if(PasswordC.contains(" ")){
+            passwordconfirmation.setError("Space is not allowed");
+            flag = 1;
+        }
+        if(PasswordC.startsWith(" ") || PasswordC.endsWith(" ")){
+            passwordconfirmation.setError("Invalid input");
             flag = 1;
         }
         if (!Password.equals(PasswordC)){
@@ -218,12 +277,16 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
             pob.setError("Place of birth must be filled");
             flag = 1;
         }
-        if(dobinput.isEmpty()){
-            from.setError("Date of birth must be filled");
+        if(pobinput.startsWith(" ") || pobinput.endsWith(" ")){
+            pob.setError("Invalid input");
             flag = 1;
         }
         if(addressinput.isEmpty()){
             alamat.setError("Address must be filled");
+            flag = 1;
+        }
+        if(addressinput.startsWith(" ") || addressinput.endsWith(" ")){
+            alamat.setError("Invalid input");
             flag = 1;
         }
         if(!phonenumberinput.matches("[0-9]{10,13}")){
@@ -250,6 +313,10 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
+                            final ProgressDialog loading = new ProgressDialog(addEmployee.this);
+                            loading.setMessage("Please Wait...");
+                            loading.show();
+                            loading.setCanceledOnTouchOutside(false);
                             String Jabatan = jabatan.getText().toString();
                             String Divisi = divisi.getText().toString();
                             String Username = username.getText().toString();
@@ -267,6 +334,7 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
+                                            loading.dismiss();
                                             try {
                                                 JSONObject jsonObject = new JSONObject(response);
                                                 String success = jsonObject.getString("success");
@@ -298,6 +366,7 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
                                     }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    loading.dismiss();
                                     Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
                                 }
                             })
