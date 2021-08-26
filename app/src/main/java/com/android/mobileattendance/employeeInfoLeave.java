@@ -1,8 +1,6 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -67,14 +68,22 @@ public class employeeInfoLeave extends AppCompatActivity {
             }
         });
     }
+
     private void callVolley(String s){
         String url = "https://shivaistic-casualti.000webhostapp.com/GetCutiData.php?data="+s;
+
+        final ProgressDialog loading = new ProgressDialog(employeeInfoLeave.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismiss();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -88,7 +97,7 @@ public class employeeInfoLeave extends AppCompatActivity {
                         itemList.add(leave);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(employeeInfoLeave.this, "No Data was found!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(employeeInfoLeave.this, "Data not found!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -96,7 +105,8 @@ public class employeeInfoLeave extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error){
-                Toast.makeText(employeeInfoLeave.this, "No Data was found!", Toast.LENGTH_SHORT).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

@@ -1,28 +1,24 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -104,12 +100,18 @@ public class employeeInfo extends AppCompatActivity {
     private void search(String s) {
         String search_url = "https://shivaistic-casualti.000webhostapp.com/SearchEmployeeInfo.php?search_query="+s;
 
+        final ProgressDialog loading = new ProgressDialog(employeeInfo.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(search_url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismiss();
                 try {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -140,8 +142,9 @@ public class employeeInfo extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismiss();
                 Log.e ("volley-error", String.valueOf(error));
-                Toast.makeText(employeeInfo.this,"Data not found !",Toast.LENGTH_LONG).show();
+                Toast.makeText(employeeInfo.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -149,12 +152,18 @@ public class employeeInfo extends AppCompatActivity {
     }
 
     private void callVolley(){
+        final ProgressDialog loading = new ProgressDialog(employeeInfo.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismiss();
                 try{
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -183,8 +192,9 @@ public class employeeInfo extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.dismiss();
                 Log.e("volley-error", String.valueOf(error));
-                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

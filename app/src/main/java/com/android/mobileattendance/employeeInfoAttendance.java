@@ -1,26 +1,21 @@
 package com.android.mobileattendance;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.TestLooperManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -28,8 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class employeeInfoAttendance extends AppCompatActivity {
 
@@ -78,12 +71,19 @@ public class employeeInfoAttendance extends AppCompatActivity {
 
     private void callVolley(String s){
         String url = "https://shivaistic-casualti.000webhostapp.com/AttendanceInfo.php?data="+s;
+
+        final ProgressDialog loading = new ProgressDialog(employeeInfoAttendance.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismiss();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -98,7 +98,7 @@ public class employeeInfoAttendance extends AppCompatActivity {
                         itemList.add(presensi);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(employeeInfoAttendance.this, "Error : "+e, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(employeeInfoAttendance.this, "Data not found !", Toast.LENGTH_SHORT).show();
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -106,7 +106,8 @@ public class employeeInfoAttendance extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(employeeInfoAttendance.this, "Error : "+error, Toast.LENGTH_SHORT).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);

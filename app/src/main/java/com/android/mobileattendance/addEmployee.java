@@ -1,8 +1,5 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -21,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,13 +29,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.json.JSONObject;
 
 public class addEmployee extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -132,7 +132,6 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void setDate(TextView view){
-
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("d/M/Y");
         String date = formatter.format(today);
@@ -145,14 +144,9 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        final ProgressDialog loading = new ProgressDialog(addEmployee.this);
-                        loading.setMessage("Please Wait...");
-                        loading.show();
-                        loading.setCanceledOnTouchOutside(false);
                         Toast.makeText(addEmployee.this, "Exit Success", Toast.LENGTH_SHORT).show();
                         Intent login = new Intent(addEmployee.this, login.class);
                         startActivity(login);
-                        loading.dismiss();
                         finish();
                         break;
 
@@ -169,14 +163,9 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void backBtn() {
-        final ProgressDialog loading = new ProgressDialog(addEmployee.this);
-        loading.setMessage("Please Wait...");
-        loading.show();
-        loading.setCanceledOnTouchOutside(false);
         Intent adminHome = new Intent(addEmployee.this, adminHome.class);
         adminHome.putExtra("fullname",fullname2);
         startActivity(adminHome);
-        loading.dismiss();
         finish();
     }
 
@@ -360,14 +349,14 @@ public class addEmployee extends AppCompatActivity implements AdapterView.OnItem
                                                 }
                                             }catch (Exception e){
                                                 e.printStackTrace();
-                                                Toast.makeText(addEmployee.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
+                                                Toast.makeText(addEmployee.this,"Failed to add new employee !",Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     loading.dismiss();
-                                    Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
                                 }
                             })
                             {

@@ -1,17 +1,17 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.TelecomManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -141,10 +141,16 @@ public class updatePassword2 extends AppCompatActivity {
                         case DialogInterface.BUTTON_POSITIVE:
                             String Password = password.getText().toString();
 
+                            final ProgressDialog loading = new ProgressDialog(updatePassword2.this);
+                            loading.setMessage("Loading ...");
+                            loading.show();
+                            loading.setCanceledOnTouchOutside(false);
+
                             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
+                                            loading.dismiss();
                                             try {
                                                 JSONObject jsonObject = new JSONObject(response);
                                                 String success = jsonObject.getString("success");
@@ -161,13 +167,14 @@ public class updatePassword2 extends AppCompatActivity {
                                                 }
                                             }catch (Exception e){
                                                 e.printStackTrace();
-                                                Toast.makeText(updatePassword2.this,"Error !"+e,Toast.LENGTH_LONG).show();
+                                                Toast.makeText(updatePassword2.this,"Error updating password !",Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(),"Volley Error !"+error,Toast.LENGTH_LONG).show();
+                                    loading.dismiss();
+                                    Toast.makeText(updatePassword2.this,"Server Offline !",Toast.LENGTH_LONG).show();
                                 }
                             })
                             {

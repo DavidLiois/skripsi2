@@ -1,37 +1,24 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class profile extends AppCompatActivity {
 
@@ -104,11 +91,18 @@ public class profile extends AppCompatActivity {
     }
 
     private void callVolley(String s){
+        final ProgressDialog loading = new ProgressDialog(profile.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         String url = "https://shivaistic-casualti.000webhostapp.com/Profile.php?data="+s;
+
         StringRequest stringRequest = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String fullname = jsonObject.getString("Fullname");
@@ -140,13 +134,14 @@ public class profile extends AppCompatActivity {
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(profile.this,"Error ! "+e,Toast.LENGTH_LONG).show();
+                            Toast.makeText(profile.this,"Data not found !",Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Error ! "+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(profile.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);

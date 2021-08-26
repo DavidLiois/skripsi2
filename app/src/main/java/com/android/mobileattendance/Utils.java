@@ -1,8 +1,9 @@
 package com.android.mobileattendance;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 public class Utils {
     public static String getIPAddress(boolean useIPv4) {

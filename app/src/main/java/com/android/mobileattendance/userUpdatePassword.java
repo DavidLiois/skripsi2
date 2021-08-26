@@ -1,8 +1,6 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -27,13 +28,13 @@ import java.util.Map;
 
 public class userUpdatePassword extends AppCompatActivity {
 
-    private static final String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePassword.php";
+    private static final String url = "https://shivaistic-casualti.000webhostapp.com/UserUpdatePassword.php";
 
     private Button exitBtn;
     private Button backBtn;
     private Button updateBtn;
     private TextView tv_username;
-    private EditText password,passwordconfirmation;
+    private EditText password,passwordconfirmation,oldpassword;;
     private String usernameTxt;
     private String fullname,id;
 
@@ -52,6 +53,7 @@ public class userUpdatePassword extends AppCompatActivity {
         updateBtn = findViewById(R.id.updatePassword);
         password = findViewById(R.id.password);
         passwordconfirmation = findViewById(R.id.passwordconfirmation);
+        oldpassword = findViewById(R.id.oldPassword);
         tv_username.setText(usernameTxt);
 
         exitBtn.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +81,13 @@ public class userUpdatePassword extends AppCompatActivity {
     private boolean isValidate(){
         String Password = password.getText().toString();
         String PasswordC = passwordconfirmation.getText().toString();
+        String oldPw = oldpassword.getText().toString();
         Integer flag = 0;
 
+        if(oldPw.isEmpty()){
+            oldpassword.setError("Old Password must be filled");
+            flag = 1;
+        }
         if(Password.isEmpty()){
             password.setError("Password must be filled");
             flag = 1;
@@ -136,10 +143,16 @@ public class userUpdatePassword extends AppCompatActivity {
     private void update(){
         String Password = password.getText().toString();
 
+        final ProgressDialog loading = new ProgressDialog(userUpdatePassword.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String success = jsonObject.getString("success");
@@ -155,15 +168,19 @@ public class userUpdatePassword extends AppCompatActivity {
                                 startActivity(adminHome);
                                 finish();
                             }
+                            if(success.equals("2")){
+                                Toast.makeText(userUpdatePassword.this,message,Toast.LENGTH_SHORT).show();
+                            }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(userUpdatePassword.this,"Error !"+e,Toast.LENGTH_LONG).show();
+                            Toast.makeText(userUpdatePassword.this,"Error updating password !",Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(userUpdatePassword.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {
@@ -172,6 +189,7 @@ public class userUpdatePassword extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", usernameTxt);
                 params.put("password", Password);
+                params.put("oldpassword", oldpassword.getText().toString());
                 return params;
             }
         };

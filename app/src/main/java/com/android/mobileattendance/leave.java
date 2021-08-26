@@ -1,6 +1,7 @@
 package com.android.mobileattendance;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -48,9 +49,6 @@ public class leave extends AppCompatActivity {
 
     private Button exitBtn;
     private Button backBtn;
-
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int PERMISSION_CODE = 1001;
 
     private Button submit;
 
@@ -167,7 +165,6 @@ public class leave extends AppCompatActivity {
     }
 
     private void setDate(TextView view){
-
         Date today = Calendar.getInstance().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("d/M/Y");
         String date = formatter.format(today);
@@ -261,10 +258,16 @@ public class leave extends AppCompatActivity {
     }
 
     private void leave_req() {
+        final ProgressDialog loading = new ProgressDialog(leave.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String success = jsonObject.getString("success");
@@ -282,13 +285,14 @@ public class leave extends AppCompatActivity {
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(leave.this,"Registration Error 1 !"+e,Toast.LENGTH_LONG).show();
+                            Toast.makeText(leave.this,"Error adding your leave request !"+e,Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error 2 !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(leave.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {

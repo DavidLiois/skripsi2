@@ -1,6 +1,7 @@
 package com.android.mobileattendance;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
@@ -119,7 +119,7 @@ public class istirahat extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    while (!isInterrupted()){
+                    while (!isInterrupted()) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -137,8 +137,7 @@ public class istirahat extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     currentDateTxt.setText(R.string.current_date);
                     currentTimeTxt.setText(R.string.current_time);
                 }
@@ -174,12 +173,19 @@ public class istirahat extends AppCompatActivity {
         });
     }
 
-    private void callVolley(){
+    private void callVolley() {
+        final ProgressDialog loading = new ProgressDialog(istirahat.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         String url = "https://shivaistic-casualti.000webhostapp.com/GetAttendanceData.php?data="+id;
+
         StringRequest stringRequest = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String Date1 = jsonObject.getString("CreatedDate");
@@ -194,30 +200,27 @@ public class istirahat extends AppCompatActivity {
                             afterBreakDate.setText("-");
                             afterBreakTime.setText("-");
 
-                            if(!Date1.equals("null")) {
-                                if(!ClockIntimeStr.equals("null")){
-                                    if(!breakStart.equals("null")){
+                            if (!Date1.equals("null")) {
+                                if (!ClockIntimeStr.equals("null")) {
+                                    if (!breakStart.equals("null")) {
                                         istirahat.setEnabled(false);
                                         breakDate.setText(Date1);
                                         breakTime.setText(breakStart);
-                                        if(!breakEnd.equals("null")){
+                                        if (!breakEnd.equals("null")) {
                                             afterBreak.setEnabled(false);
                                             afterBreakDate.setText(Date1);
                                             afterBreakTime.setText(breakEnd);
-                                        }
-                                        else{
+                                        } else {
                                             afterBreakDate.setText("-");
                                             afterBreakTime.setText("-");
                                             afterBreak.setEnabled(true);
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         breakTime.setText("-");
                                         breakDate.setText("-");
                                         istirahat.setEnabled(true);
                                     }
-                                }
-                                else{
+                                } else {
                                     istirahat.setEnabled(false);
                                     afterBreak.setEnabled(false);
                                     breakDate.setText("-");
@@ -225,7 +228,7 @@ public class istirahat extends AppCompatActivity {
                                     afterBreakDate.setText("-");
                                     afterBreakTime.setText("-");
                                 }
-                            }else {
+                            } else {
                                 istirahat.setEnabled(false);
                                 afterBreak.setEnabled(false);
                                 breakDate.setText("-");
@@ -234,7 +237,7 @@ public class istirahat extends AppCompatActivity {
                                 afterBreakTime.setText("-");
                             }
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                             istirahat.setEnabled(false);
                             afterBreak.setEnabled(false);
@@ -247,7 +250,8 @@ public class istirahat extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Error ! "+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -258,7 +262,7 @@ public class istirahat extends AppCompatActivity {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         Toast.makeText(istirahat.this, "Exit Success", Toast.LENGTH_SHORT).show();
                         Intent login = new Intent(istirahat.this, login.class);
@@ -287,6 +291,16 @@ public class istirahat extends AppCompatActivity {
     }
 
     private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Task<Location> task = client.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
@@ -312,6 +326,7 @@ public class istirahat extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation();
@@ -358,8 +373,12 @@ public class istirahat extends AppCompatActivity {
     }
 
     private void istirahatSuccess(){
-
         String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
+
+        final ProgressDialog loading = new ProgressDialog(istirahat.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -380,12 +399,13 @@ public class istirahat extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        loading.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(istirahat.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {
@@ -406,6 +426,11 @@ public class istirahat extends AppCompatActivity {
     private void afterBreakSuccess(){
         String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
 
+        final ProgressDialog loading = new ProgressDialog(istirahat.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         Calendar calendar = Calendar.getInstance();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -425,11 +450,13 @@ public class istirahat extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(istirahat.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {

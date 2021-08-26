@@ -1,6 +1,7 @@
 package com.android.mobileattendance;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -117,7 +117,7 @@ public class attendance extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    while (!isInterrupted()){
+                    while (!isInterrupted()) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -135,8 +135,7 @@ public class attendance extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     currentDateTxt.setText(R.string.current_date);
                     currentTimeTxt.setText(R.string.current_time);
                 }
@@ -177,12 +176,17 @@ public class attendance extends AppCompatActivity {
         backBtn();
     }
 
-    private void callVolley(){
-        String url = "https://shivaistic-casualti.000webhostapp.com/GetAttendanceData.php?data="+id;
+    private void callVolley() {
+        final ProgressDialog loading = new ProgressDialog(attendance.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+        String url = "https://shivaistic-casualti.000webhostapp.com/GetAttendanceData.php?data=" + id;
         StringRequest stringRequest = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String Date1 = jsonObject.getString("CreatedDate");
@@ -196,26 +200,25 @@ public class attendance extends AppCompatActivity {
                             clockOutDate.setText("-");
                             clockOutTime.setText("-");
 
-                            if(!Date1.equals("null")) {
-                                if(!ClockIntimeStr.equals("null")){
+                            if (!Date1.equals("null")) {
+                                if (!ClockIntimeStr.equals("null")) {
                                     clockIn.setEnabled(false);
                                     clockInDate.setText(Date1);
                                     clockInTime.setText(ClockIntimeStr);
-                                    if(!ClockOuttimeStr.equals("null")){
+                                    if (!ClockOuttimeStr.equals("null")) {
                                         clockOutDate.setText(Date1);
                                         clockOutTime.setText(ClockOuttimeStr);
-                                    }else {
+                                    } else {
                                         clockOutDate.setText("-");
                                         clockOutTime.setText("-");
                                         clockOut.setEnabled(true);
                                     }
-                                }
-                                else{
+                                } else {
                                     clockInDate.setText("-");
                                     clockInTime.setText("-");
                                     clockIn.setEnabled(true);
                                 }
-                            }else {
+                            } else {
                                 clockIn.setEnabled(true);
                                 clockOut.setEnabled(false);
                                 clockInDate.setText("-");
@@ -223,7 +226,7 @@ public class attendance extends AppCompatActivity {
                                 clockOutDate.setText("-");
                                 clockOutTime.setText("-");
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             clockIn.setEnabled(true);
                             clockOut.setEnabled(false);
                             clockInDate.setText("-");
@@ -236,7 +239,8 @@ public class attendance extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Error ! "+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(), "Server Offline ! ", Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -247,7 +251,7 @@ public class attendance extends AppCompatActivity {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         Toast.makeText(attendance.this, "Exit Success", Toast.LENGTH_SHORT).show();
                         Intent login = new Intent(attendance.this, login.class);
@@ -269,13 +273,23 @@ public class attendance extends AppCompatActivity {
 
     private void backBtn() {
         Intent userHome = new Intent(attendance.this, userHome.class);
-        userHome.putExtra("id",id);
-        userHome.putExtra("fullname",fullname);
+        userHome.putExtra("id", id);
+        userHome.putExtra("fullname", fullname);
         startActivity(userHome);
         finish();
     }
 
     private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Task<Location> task = client.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
@@ -301,6 +315,7 @@ public class attendance extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation();
@@ -354,6 +369,10 @@ public class attendance extends AppCompatActivity {
     }
 
     private void clockInSuccess(){
+        final ProgressDialog loading = new ProgressDialog(attendance.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
 
         String url = "https://shivaistic-casualti.000webhostapp.com/AddPresensi.php";
 
@@ -371,6 +390,7 @@ public class attendance extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String success = jsonObject.getString("success");
@@ -379,23 +399,24 @@ public class attendance extends AppCompatActivity {
                                 Toast.makeText(attendance.this,message,Toast.LENGTH_SHORT).show();
                             }
                             if(success.equals("1")){
-                                Toast.makeText(attendance.this,message,Toast.LENGTH_SHORT).show();
                                 clockInDate.setText(dateTime);
                                 clockInTime.setText(dateTime2);
 
                                 clockIn.setEnabled(false);
                                 clockOut.setEnabled(true);
 
+                                Toast.makeText(attendance.this,message,Toast.LENGTH_SHORT).show();
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(attendance.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
+                            Toast.makeText(attendance.this,"Failed to Clock In !",Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {
@@ -417,6 +438,10 @@ public class attendance extends AppCompatActivity {
     }
 
     private void clockOutSuccess(){
+        final ProgressDialog loading = new ProgressDialog(attendance.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
 
         String url = "https://shivaistic-casualti.000webhostapp.com/UpdatePresensi.php";
 
@@ -438,11 +463,15 @@ public class attendance extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {}
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        Toast.makeText(attendance.this,"Clock Out success !",Toast.LENGTH_SHORT).show();
+                    }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(),"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {

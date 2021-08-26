@@ -1,6 +1,7 @@
 package com.android.mobileattendance;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -111,10 +112,16 @@ public class UserAdapter extends BaseAdapter {
     }
 
     public void post(String u){
+        final ProgressDialog loading = new ProgressDialog(activity);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String success = jsonObject.getString("success");
@@ -132,13 +139,14 @@ public class UserAdapter extends BaseAdapter {
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(activity,"Error ! "+e,Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity,"Error deleting profile !",Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity,"Volley Error ! "+error,Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(activity,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         })
         {

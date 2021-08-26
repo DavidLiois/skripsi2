@@ -1,17 +1,16 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,9 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class attendanceInfo extends AppCompatActivity {
 
@@ -72,6 +69,11 @@ public class attendanceInfo extends AppCompatActivity {
     }
 
     private void callVolley(){
+        final ProgressDialog loading = new ProgressDialog(attendanceInfo.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
@@ -80,28 +82,31 @@ public class attendanceInfo extends AppCompatActivity {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject jsonObject = response.getJSONObject(i);
+                loading.dismiss();
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                            JSONObject jsonObject = response.getJSONObject(i);
 
-                        attendanceinfomodel presensi = new attendanceinfomodel();
-                        presensi.setDate2(jsonObject.getString("CreatedDate"));
-                        presensi.setJamDatang(jsonObject.getString("JamDatang"));
-                        presensi.setJamPulang(jsonObject.getString("JamPulang"));
-                        presensi.setMulaiIstirahat(jsonObject.getString("MulaiIstirahat"));
-                        presensi.setSelesaiIstirahat(jsonObject.getString("SelesaiIstirahat"));
+                            attendanceinfomodel presensi = new attendanceinfomodel();
+                            presensi.setDate2(jsonObject.getString("CreatedDate"));
+                            presensi.setJamDatang(jsonObject.getString("JamDatang"));
+                            presensi.setJamPulang(jsonObject.getString("JamPulang"));
+                            presensi.setMulaiIstirahat(jsonObject.getString("MulaiIstirahat"));
+                            presensi.setSelesaiIstirahat(jsonObject.getString("SelesaiIstirahat"));
 
-                        itemList.add(presensi);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            itemList.add(presensi);
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(attendanceInfo.this,"Data not found !",Toast.LENGTH_SHORT).show();
                 }
                 adapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                loading.dismiss();
+                Toast.makeText(attendanceInfo.this,"Server Offline !",Toast.LENGTH_SHORT).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

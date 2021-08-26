@@ -1,15 +1,12 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +14,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,12 +28,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,7 +151,6 @@ public class updateProfile2 extends AppCompatActivity {
                         startActivity(login);
                         finish();
                         break;
-
                     case DialogInterface.BUTTON_NEGATIVE:
                         //No button clicked
                         break;
@@ -229,12 +223,16 @@ public class updateProfile2 extends AppCompatActivity {
 
     private void update() {
         if(isValidate()){
-
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
+                            final ProgressDialog loading = new ProgressDialog(updateProfile2.this);
+                            loading.setMessage("Loading ...");
+                            loading.show();
+                            loading.setCanceledOnTouchOutside(false);
+
                             String Jabatan = jabatan.getText().toString();
                             String Divisi = divisi.getText().toString();
                             String Fullname = fullname.getText().toString();
@@ -248,6 +246,7 @@ public class updateProfile2 extends AppCompatActivity {
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
+                                            loading.dismiss();
                                             try {
                                                 JSONObject jsonObject = new JSONObject(response);
                                                 String success = jsonObject.getString("success");
@@ -264,13 +263,14 @@ public class updateProfile2 extends AppCompatActivity {
                                                 }
                                             }catch (Exception e){
                                                 e.printStackTrace();
-                                                Toast.makeText(updateProfile2.this,"Registration Error !"+e,Toast.LENGTH_LONG).show();
+                                                Toast.makeText(updateProfile2.this,"Error updating profile !",Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(),"Registration Error !"+error,Toast.LENGTH_LONG).show();
+                                    loading.dismiss();
+                                    Toast.makeText(updateProfile2.this,"Server Offline !",Toast.LENGTH_LONG).show();
                                 }
                             })
                             {

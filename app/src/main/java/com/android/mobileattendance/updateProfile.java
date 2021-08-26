@@ -1,19 +1,19 @@
 package com.android.mobileattendance;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -101,12 +101,18 @@ updateProfile extends AppCompatActivity {
     private void search(String s) {
         String search_url = "https://shivaistic-casualti.000webhostapp.com/Searching.php?search_query="+s;
 
+        final ProgressDialog loading = new ProgressDialog(updateProfile.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         itemList.clear();
         adapter.notifyDataSetChanged();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(search_url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                loading.dismiss();
                 try {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -129,7 +135,7 @@ updateProfile extends AppCompatActivity {
                 catch (JSONException e){
                     e.printStackTrace();
                     Log.e("error", String.valueOf(e));
-                    Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                    Toast.makeText(updateProfile.this,"Data not found !",Toast.LENGTH_LONG).show();
                 }
                 finally {
                     adapter.notifyDataSetChanged();
@@ -139,7 +145,8 @@ updateProfile extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("error", String.valueOf(error));
-                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(updateProfile.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -150,10 +157,16 @@ updateProfile extends AppCompatActivity {
         itemList.clear();
         adapter.notifyDataSetChanged();
 
+        final ProgressDialog loading = new ProgressDialog(updateProfile.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
+                    loading.dismiss();
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
 
@@ -173,7 +186,7 @@ updateProfile extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.e("error", String.valueOf(e));
-                        Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                        Toast.makeText(updateProfile.this,"Data not found !",Toast.LENGTH_LONG).show();
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -182,7 +195,8 @@ updateProfile extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("error", String.valueOf(error));
-                Toast.makeText(getApplicationContext(),"Data not found !",Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(updateProfile.this,"Server Offline !",Toast.LENGTH_LONG).show();
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);

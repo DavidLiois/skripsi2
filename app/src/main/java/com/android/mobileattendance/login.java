@@ -1,10 +1,7 @@
 package com.android.mobileattendance;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +15,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,19 +28,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.json.JSONObject;
 
 public class login extends AppCompatActivity {
 
@@ -153,6 +148,10 @@ public class login extends AppCompatActivity {
     private static final String url = "https://shivaistic-casualti.000webhostapp.com/Login.php";
 
     private void loginBtn(){
+        final ProgressDialog loading = new ProgressDialog(login.this);
+        loading.setMessage("Loading ...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
         String Username = username.getText().toString();
         String Password = password.getText().toString();
 
@@ -180,6 +179,7 @@ public class login extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            loading.dismiss();
                             try{
                                 JSONObject jsonObject = new JSONObject(response);
                                 String success = jsonObject.getString("success");
@@ -204,12 +204,12 @@ public class login extends AppCompatActivity {
                                     }
                                 }
                                 if(success.equals("0")){
-                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                                     failedLoginAttempt(Username, Password, latitude, longtitude);
+                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                                 }
                                 if(success.equals("2")){
-                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                                     failedLoginAttempt(Username, Password, latitude, longtitude);
+                                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -219,6 +219,7 @@ public class login extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    loading.dismiss();
                     Toast.makeText(login.this,"Server Offline",Toast.LENGTH_SHORT).show();
                 }
             })
